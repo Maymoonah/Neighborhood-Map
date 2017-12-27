@@ -1,6 +1,13 @@
 #map {
 	height: 100%;	
-	width: 100%;
+	width: 80%;
+	float: right;
+}
+
+#listView {
+	/*float: left;*/
+	height: 100%;
+	width: 400px;
 }
 
 html, body {
