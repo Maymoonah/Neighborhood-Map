@@ -38,7 +38,7 @@ function initMap() {
 		});
 	}
 	//create seachbox
-	let input = $('input');
+	let input = document.getElementById('search');
 	let searchBox = new google.maps.places.SearchBox(input);
 }
 
