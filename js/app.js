@@ -39,6 +39,13 @@ function initMap() {
 	}
 	//create seachbox
 	let input = document.getElementById('search');
-	let searchBox = new google.maps.places.SearchBox(input);
+	let autocomplete = new google.maps.places.Autocomplete(input);
+
+	//get search results
+	autocomplete.addListener('place_changed', function() {
+		let locations = autocomplete.getPlace();
+		console.log(locations);
+		autocomplete.bindTo('bounds', map);
+	});
 }
 
