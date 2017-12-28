@@ -2,26 +2,28 @@
 <html>
 	<head>
 		<link rel="stylesheet" type="text/css" href="css/app.css">
+		<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 		<title>Neighborhood Map</title>
 	</head>
 	<body>
 		<div id="map"></div>
 		<div class="listView">
 			<div id="input">
-				<input type="text" name="search">
-				<button id="filter">Filter</button>
+				<input type="text" id="search" placeholder="Search">
+				<button id="filter"><i class="fa fa-filter" aria-hidden="true"></i>Filter</button>
 			</div>
 			<div id="results">
 				<ul id="listItems"></ul>
 			</div>
 		</div>
 		
-		<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDptmRQg_avx5L5y4USJ_3QCVEY6ClDhU&callback=initMap"></script>
 		<script
 		src="https://code.jquery.com/jquery-3.2.1.min.js"
 		integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
 		crossorigin="anonymous"></script>
 		<script type="text/javascript" src="knockout-3.4.2.js"></script>
+		<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDptmRQg_avx5L5y4USJ_3QCVEY6ClDhU&libraries=places&callback=initMap"></script>
 		<script type="text/javascript" src="js/app.js"></script>
+
 	</body>
 </html>
