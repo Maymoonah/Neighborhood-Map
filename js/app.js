@@ -29,7 +29,7 @@ function initMap() {
 
 		//create info windows
 		let infowindow = new google.maps.InfoWindow({
-			content: markers[i].title
+			content: `<strong>${marker.title}</strong>`
 		});
 
 		//listen for click on markers
@@ -37,6 +37,8 @@ function initMap() {
 			infowindow.open(map, marker);
 		});
 	}
+	//create seachbox
+	let input = $('input');
+	let searchBox = new google.maps.places.SearchBox(input);
 }
-
 
