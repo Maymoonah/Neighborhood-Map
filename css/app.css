@@ -9,8 +9,14 @@
 }
 
 #filter {
-	padding: 3px;
+	padding: 5px;
 	font-weight: bold;
+	padding-right: 8px;
+	background-color: #2a64c1;
+	color: #fff;
+	border: none;
+	border-radius: 2px;
+	box-shadow: 1px 1px  rgba(255,255,255,0.2);
 }
 
 .listView {
@@ -20,6 +26,10 @@
 	background-color: #303235;
 }
 
+i {
+	padding-right: 2px;
+	color: #fff;
+}
 input {
 	width: 200px;
 	padding: 3px;
