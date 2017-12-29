@@ -9,14 +9,16 @@ function initMap() {
 	//creating map
 	map = new google.maps.Map(document.getElementById('map'), options);
 
-	//creating markers
-	let markers = [
+	//creating markers array using knockout
+	let markers = ko.observableArray([
 		{title: 'Donut Tree', location: {lat: 34.020174, lng: -117.864982}},
 		{title: 'Mt. San Antonio College', location: {lat: 34.047693, lng: -117.844858}},
 		{title: 'ICSGV', location: {lat: 33.994873, lng: -117.884711}},
 		{title: 'Yogurtland', location: {lat: 34.027874, lng: -117.833771}},
 		{title: 'Oak Tree Lanes', location: {lat: 34.035642, lng: -117.805326}}
-	];
+	]);
+
+	ko.applyBindings(markers);
 
 	//adding markers to map
 	for(let i = 0; i < markers.length; i++) {
@@ -37,7 +39,7 @@ function initMap() {
 			infowindow.open(map, marker);
 		});
 	}
-	//create seachbox
+	//create place autocomplete
 	let input = document.getElementById('search');
 	let autocomplete = new google.maps.places.Autocomplete(input);
 
