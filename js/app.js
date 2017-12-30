@@ -1,3 +1,4 @@
+let markers, locations;
 //Initialize the map
 function initMap() {
 	let map;
@@ -10,14 +11,14 @@ function initMap() {
 	map = new google.maps.Map(document.getElementById('map'), options);
 
 	//creating markers array using knockout and binding it to the list view
-	ko.applyBindings({
-		markers: [
+	markers = [
 			{title: 'Donut Tree', location: {lat: 34.020174, lng: -117.864982}},
 			{title: 'Mt. San Antonio College', location: {lat: 34.047693, lng: -117.844858}},
 			{title: 'ICSGV', location: {lat: 33.994873, lng: -117.884711}},
 			{title: 'Yogurtland', location: {lat: 34.027874, lng: -117.833771}},
 			{title: 'Oak Tree Lanes', location: {lat: 34.035642, lng: -117.805326}}
-		]});
+		];
+	// ko.applyBindings(markers);
 
 	//adding markers to map
 	for(let i = 0; i < markers.length; i++) {
@@ -44,8 +45,15 @@ function initMap() {
 
 	//get search results
 	autocomplete.addListener('place_changed', function() {
-		let locations = autocomplete.getPlace();
-		console.log(locations);
+		locations = autocomplete.getPlace();
+		//add new location to markers array
+		markers.push({
+			title: locations.name,
+			locations: {
+				lat: locations.geometry.location.lat(),
+				lng: locations.geometry.location.lng()
+			}
+		});
 		autocomplete.bindTo('bounds', map);
 	});
 }
