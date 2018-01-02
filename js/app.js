@@ -10,15 +10,7 @@ function initMap() {
 	//creating map
 	map = new google.maps.Map(document.getElementById('map'), options);
 
-	//creating markers array using knockout and binding it to the list view
-	// markers = [
-	// 		{title: 'Donut Tree', location: {lat: 34.020174, lng: -117.864982}},
-	// 		{title: 'Mt. San Antonio College', location: {lat: 34.047693, lng: -117.844858}},
-	// 		{title: 'ICSGV', location: {lat: 33.994873, lng: -117.884711}},
-	// 		{title: 'Yogurtland', location: {lat: 34.027874, lng: -117.833771}},
-	// 		{title: 'Oak Tree Lanes', location: {lat: 34.035642, lng: -117.805326}}
-	// 	];
-
+	//View Model
 	ViewModel = {
 		markers: ko.observableArray([
 			{title: 'Donut Tree', location: {lat: 34.020174, lng: -117.864982}},
@@ -36,8 +28,9 @@ function initMap() {
 					title: this.markers()[i].title,
 					animation: google.maps.Animation.DROP,
 				});
+				
 			}
-			this.addInfoWindow();
+			// this.addInfoWindow();
 		},
 
 		addInfoWindow: function() {
@@ -85,6 +78,12 @@ function initMap() {
 			title: autoLocation.name,
 			animation: google.maps.Animation.DROP,
 		});
+
+		//clear the input box
+		document.getElementById('search').value = '';
+
+		//add info window for new marker
+		ViewModel.addInfoWindow();
 
 		//bias results for auto complete to bounds of current map area
 		autocomplete.bindTo('bounds', map);
