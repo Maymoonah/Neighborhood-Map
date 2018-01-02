@@ -1,4 +1,4 @@
-let markers, locations, ViewModel;
+let markers, locations, ViewModel, marker;
 //Initialize the map
 function initMap() {
 	let map;
@@ -30,26 +30,30 @@ function initMap() {
 
 		addMarker: function() {
 			for(let i = 0; i < this.markers().length; i++) {
-				let marker = new google.maps.Marker({
+				marker = new google.maps.Marker({
 					position: this.markers()[i].location,
 					map: map,
 					title: this.markers()[i].title,
 					animation: google.maps.Animation.DROP,
 				});
-
-				//create info windows
-				let infowindow = new google.maps.InfoWindow({
-					content: `<strong>${marker.title}</strong>`
-				});
-
-				//listen for click on markers
-				marker.addListener('click', function() {
-					infowindow.open(map, marker);
-				});
 			}
+			this.addInfoWindow();
+		},
+
+		addInfoWindow: function() {
+			//create info windows
+			let infowindow = new google.maps.InfoWindow({
+				content: `<strong>${marker.title}</strong>`
+			});
+
+			//listen for click on markers
+			marker.addListener('click', function() {
+				infowindow.open(map, marker);
+			});
 		}
 	};
 
+	//apply bindings
 	ko.applyBindings(ViewModel);
 
 	//adding markers to map
@@ -61,19 +65,29 @@ function initMap() {
 
 	//get search results
 	autocomplete.addListener('place_changed', function() {
-		locations = autocomplete.getPlace();
+		autoLocation = autocomplete.getPlace();
 		// add new location to markers array
 		ViewModel.markers.push({
-			title: locations.name,
+			title: autoLocation.name,
 			locations: {
-				lat: locations.geometry.location.lat(),
-				lng: locations.geometry.location.lng()
+				lat: autoLocation.geometry.location.lat(),
+				lng: autoLocation.geometry.location.lng()
 			}
 		});
-		autocomplete.bindTo('bounds', map);
 
-		//add marker for new location to the map
-		ViewModel.addMarker();
+		//add marker and info window for new location to the map
+		marker = new google.maps.Marker({
+			position: {
+				lat: autoLocation.geometry.location.lat(),
+				lng: autoLocation.geometry.location.lng()
+			},
+			map: map,
+			title: autoLocation.name,
+			animation: google.maps.Animation.DROP,
+		});
+
+		//bias results for auto complete to bounds of current map area
+		autocomplete.bindTo('bounds', map);
 	});
 }
 
