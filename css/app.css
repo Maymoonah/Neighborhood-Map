@@ -1,6 +1,6 @@
 #map {
 	height: 100%;	
-	width: 80%;
+	width: 78%;
 	float: right;
 }
 
@@ -9,20 +9,21 @@
 }
 
 #filter {
-	padding: 5px;
+	padding: 10px;
 	font-weight: bold;
-	padding-right: 8px;
 	background-color: #2a64c1;
 	color: #fff;
 	border: none;
 	border-radius: 2px;
 	box-shadow: 1px 1px  rgba(255,255,255,0.2);
+	margin-left: 5px;
+	font-size: 15px;
 }
 
 .listView {
 	float: left;
 	height: 100%;
-	width: 20%;
+	width: 22%;
 	background-color: #303235;
 }
 
@@ -47,7 +48,7 @@ i {
 }
 input {
 	width: 200px;
-	padding: 3px;
+	padding: 10px;
 }
 
 html, body {
@@ -73,4 +74,9 @@ hr {
 ul {
 	padding: 0;
 	margin: 6px;
+}
+
+#bars{
+	font-size: 28px;
+	margin-left: 165px;
 }
