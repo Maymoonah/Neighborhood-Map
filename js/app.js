@@ -1,4 +1,4 @@
-let markers, locations, ViewModel, marker;
+let markers, locations, ViewModel, marker, infowindow;
 //Initialize the map
 function initMap() {
 	let map;
@@ -31,7 +31,7 @@ function initMap() {
 			{title: 'Chevron', location: {lat: 34.015822, lng: -117.850391}, icon: './images/gas-station.png'},			
 			{title: 'Bank of America', location: {lat: 34.013161, lng: -117.861232}, icon: './images/bank.png'}
 		]),
-
+		//add marker to map
 		addMarker: function() {
 			for(let i = 0; i < this.markers().length; i++) {
 				marker = new google.maps.Marker({
@@ -41,14 +41,13 @@ function initMap() {
 					icon: this.markers()[i].icon,
 					animation: google.maps.Animation.DROP
 				});
-				
+				this.addInfoWindow();
 			}
-			this.addInfoWindow();
 		},
-
+		//add infowindow to marker
 		addInfoWindow: function() {
 			//create info windows
-			let infowindow = new google.maps.InfoWindow({
+			infowindow = new google.maps.InfoWindow({
 				content: `<strong>${marker.title}</strong>`
 			});
 
@@ -56,11 +55,16 @@ function initMap() {
 			marker.addListener('click', function() {
 				infowindow.open(map, marker);
 			});
+		},
+
+		sortList: function() {
+			this.markers.sort();
 		}
 	};
 
-	//apply bindings
+	//apply bindings and sort list
 	ko.applyBindings(ViewModel);
+	ViewModel.sortList();
 
 	//adding markers to map
 	ViewModel.addMarker();
@@ -103,3 +107,17 @@ function initMap() {
 	});
 }
 
+// show/hide sidebar when bars icon is clicked
+$('#bars').on('click', function() {
+	if($('.listView').css('visibility', 'visible')) {
+		$('#map').css('width', '100%');
+		$('.mapNav').css('width', '100%');
+		$('.listView').css('visibility', 'hidden');
+		$('.navbar').css('visibility', 'hidden');
+	} else {
+		$('#map').css('width', '100%');
+		$('.mapNav').css('width', '100%');
+		$('.listView').css('visibility', 'visible');
+		$('.navbar').css('visibility', 'visible');
+	}
+});
