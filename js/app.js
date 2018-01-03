@@ -17,7 +17,14 @@ function initMap() {
 			{title: 'Mt. San Antonio College', location: {lat: 34.047693, lng: -117.844858}},
 			{title: 'ICSGV', location: {lat: 33.994873, lng: -117.884711}},
 			{title: 'Yogurtland', location: {lat: 34.027874, lng: -117.833771}},
-			{title: 'Oak Tree Lanes', location: {lat: 34.035642, lng: -117.805326}}
+			{title: 'Oak Tree Lanes', location: {lat: 34.035642, lng: -117.805326}},
+			{title: 'Nogales High School', location: {lat: 34.009556, lng: -117.889152}},			
+			{title: 'Pizza Hut', location: {lat: 34.011620, lng: -117.886432}},
+			{title: 'Domino\'s Pizza', location: {lat: 34.027549, lng: -117.893225}},
+			{title: 'Baskin-Robbins', location: {lat: 34.011885, lng: -117.886430}},
+			{title: 'Suzanne Middle School', location: {lat: 34.025070, lng: -117.850407}},
+			{title: 'Walnut High School', location: {lat: 34.021202, lng: -117.849043}},
+			{title: 'Walnut High School', location: {lat: 34.021202, lng: -117.849043}}
 		]),
 
 		addMarker: function() {
@@ -26,11 +33,11 @@ function initMap() {
 					position: this.markers()[i].location,
 					map: map,
 					title: this.markers()[i].title,
-					animation: google.maps.Animation.DROP,
+					animation: google.maps.Animation.DROP
 				});
 				
 			}
-			// this.addInfoWindow();
+			this.addInfoWindow();
 		},
 
 		addInfoWindow: function() {
