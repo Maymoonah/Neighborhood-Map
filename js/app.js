@@ -12,6 +12,7 @@ function initMap() {
 
 	//View Model
 	ViewModel = {
+		self: this,
 		markers: ko.observableArray([
 			{title: 'Krispy Kreme', location: {lat: 33.994923, lng: -117.930837}, icon: './images/donut.png'},
 			{title: 'Mt. San Antonio College', location: {lat: 34.047693, lng: -117.844858}, icon: './images/college.png'},
@@ -33,15 +34,15 @@ function initMap() {
 		]),
 		//add marker to map
 		addMarker: function() {
-			for(let i = 0; i < this.markers().length; i++) {
+			for(let i = 0; i < self.markers().length; i++) {
 				marker = new google.maps.Marker({
-					position: this.markers()[i].location,
+					position: self.markers()[i].location,
 					map: map,
-					title: this.markers()[i].title,
-					icon: this.markers()[i].icon,
+					title: self.markers()[i].title,
+					icon: self.markers()[i].icon,
 					animation: google.maps.Animation.DROP
 				});
-				this.addInfoWindow();
+				self.addInfoWindow();
 			}
 		},
 		//add infowindow to marker
@@ -58,8 +59,19 @@ function initMap() {
 		},
 
 		sortList: function() {
-			this.markers.sort();
-		}
+			self.markers.sort();
+		},
+
+		//filter the items using the filter text
+		filterText: ko.observable(''),
+		filteredLoc: ko.computed(function() {
+			if (self.filterText().length > 0) {
+				let locArray = self.markers();			
+				return ko.utils.arrayFilter(locArray, function(marker) {
+					 return ko.utils.stringStartsWith(marker.location.toLowerCase(), self.filterText());
+				});
+			}
+		})
 	};
 
 	//apply bindings and sort list
@@ -68,56 +80,58 @@ function initMap() {
 
 	//adding markers to map
 	ViewModel.addMarker();
-	
-	//create place autocomplete
-	let input = document.getElementById('search');
-	let autocomplete = new google.maps.places.Autocomplete(input);
 
-	//get search results
-	autocomplete.addListener('place_changed', function() {
-		autoLocation = autocomplete.getPlace();
-		// add new location to markers array
-		ViewModel.markers.push({
-			title: autoLocation.name,
-			locations: {
-				lat: autoLocation.geometry.location.lat(),
-				lng: autoLocation.geometry.location.lng()
-			}
-		});
 
-		//add marker and info window for new location to the map
-		marker = new google.maps.Marker({
-			position: {
-				lat: autoLocation.geometry.location.lat(),
-				lng: autoLocation.geometry.location.lng()
-			},
-			map: map,
-			title: autoLocation.name,
-			animation: google.maps.Animation.DROP,
-		});
-
-		//clear the input box
-		document.getElementById('search').value = '';
-
-		//add info window for new marker
-		ViewModel.addInfoWindow();
-
-		//bias results for auto complete to bounds of current map area
-		autocomplete.bindTo('bounds', map);
-	});
 }
 
+//create place autocomplete
+	// let input = document.getElementById('search');
+	// let autocomplete = new google.maps.places.Autocomplete(input);
+
+	//get search results
+	// autocomplete.addListener('place_changed', function() {
+	// 	autoLocation = autocomplete.getPlace();
+	// 	// add new location to markers array
+	// 	ViewModel.markers.push({
+	// 		title: autoLocation.name,
+	// 		locations: {
+	// 			lat: autoLocation.geometry.location.lat(),
+	// 			lng: autoLocation.geometry.location.lng()
+	// 		}
+	// 	});
+
+	// 	//add marker and info window for new location to the map
+	// 	marker = new google.maps.Marker({
+	// 		position: {
+	// 			lat: autoLocation.geometry.location.lat(),
+	// 			lng: autoLocation.geometry.location.lng()
+	// 		},
+	// 		map: map,
+	// 		title: autoLocation.name,
+	// 		animation: google.maps.Animation.DROP,
+	// 	});
+
+	// 	//clear the input box
+	// 	document.getElementById('search').value = '';
+
+	// 	//add info window for new marker
+	// 	ViewModel.addInfoWindow();
+
+	// 	//bias results for auto complete to bounds of current map area
+	// 	autocomplete.bindTo('bounds', map);
+	// });
+
 // show/hide sidebar when bars icon is clicked
-$('#bars').on('click', function() {
-	if($('.listView').css('visibility', 'visible')) {
-		$('#map').css('width', '100%');
-		$('.mapNav').css('width', '100%');
-		$('.listView').css('visibility', 'hidden');
-		$('.navbar').css('visibility', 'hidden');
-	} else {
-		$('#map').css('width', '100%');
-		$('.mapNav').css('width', '100%');
-		$('.listView').css('visibility', 'visible');
-		$('.navbar').css('visibility', 'visible');
-	}
-});
+// $('#bars').on('click', function() {
+// 	if($('.listView').css('visibility', 'visible')) {
+// 		$('#map').css('width', '100%');
+// 		$('.mapNav').css('width', '100%');
+// 		$('.listView').css('visibility', 'hidden');
+// 		$('.navbar').css('visibility', 'hidden');
+// 	} else {
+// 		$('#map').css('width', '100%');
+// 		$('.mapNav').css('width', '100%');
+// 		$('.listView').css('visibility', 'visible');
+// 		$('.navbar').css('visibility', 'visible');
+// 	}
+// });
