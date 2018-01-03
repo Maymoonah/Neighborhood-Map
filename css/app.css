@@ -29,6 +29,10 @@
 	padding: 5px 8px;
 }
 
+.fa-globe {
+	margin-right: 8px;
+}
+
 .listView {
 	float: left;
 	height: 100%;
