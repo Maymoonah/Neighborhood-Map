@@ -12,7 +12,6 @@ function initMap() {
 
 	//View Model
 	ViewModel = {
-		self: this,
 		markers: ko.observableArray([
 			{title: 'Krispy Kreme', location: {lat: 33.994923, lng: -117.930837}, icon: './images/donut.png'},
 			{title: 'Mt. San Antonio College', location: {lat: 34.047693, lng: -117.844858}, icon: './images/college.png'},
@@ -34,17 +33,18 @@ function initMap() {
 		]),
 		//add marker to map
 		addMarker: function() {
-			for(let i = 0; i < self.markers().length; i++) {
+			for(let i = 0; i < this.markers().length; i++) {
 				marker = new google.maps.Marker({
-					position: self.markers()[i].location,
+					position: this.markers()[i].location,
 					map: map,
-					title: self.markers()[i].title,
-					icon: self.markers()[i].icon,
+					title: this.markers()[i].title,
+					icon: this.markers()[i].icon,
 					animation: google.maps.Animation.DROP
 				});
-				self.addInfoWindow();
+				this.addInfoWindow();
 			}
 		},
+
 		//add infowindow to marker
 		addInfoWindow: function() {
 			//create info windows
@@ -52,26 +52,26 @@ function initMap() {
 				content: `<strong>${marker.title}</strong>`
 			});
 
+			//creates an infowindow 'key' in the marker. (from: https://leewc.com/articles/google-maps-infowindow/)
+			marker.infowindow = infowindow;
+
 			//listen for click on markers
-			marker.addListener('click', function() {
-				infowindow.open(map, marker);
+			google.maps.event.addListener(marker, 'click', function() {
+				this.infowindow.open(map, this);
 			});
 		},
 
 		sortList: function() {
-			self.markers.sort();
+			this.markers.sort();
 		},
 
 		//filter the items using the filter text
-		filterText: ko.observable(''),
-		filteredLoc: ko.computed(function() {
-			if (self.filterText().length > 0) {
-				let locArray = self.markers();			
-				return ko.utils.arrayFilter(locArray, function(marker) {
-					 return ko.utils.stringStartsWith(marker.location.toLowerCase(), self.filterText());
-				});
-			}
-		})
+		// filterText: ko.observable(),
+		// filteredLoc: ko.computed(function() {		
+		// 		return ko.utils.arrayFilter(this.markers(), function(marker) {
+		// 			 return ko.utils.stringStartsWith(marker.location.toLowerCase(), this.filterText());
+		// 		});
+		// })
 	};
 
 	//apply bindings and sort list
@@ -80,9 +80,9 @@ function initMap() {
 
 	//adding markers to map
 	ViewModel.addMarker();
-
-
 }
+
+// ********************************************************************
 
 //create place autocomplete
 	// let input = document.getElementById('search');
