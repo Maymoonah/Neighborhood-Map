@@ -15,7 +15,7 @@ function initMap() {
 		markers: ko.observableArray([
 			{title: 'Krispy Kreme', location: {lat: 33.994923, lng: -117.930837}, icon: './images/donut.png'},
 			{title: 'Mt. San Antonio College', location: {lat: 34.047693, lng: -117.844858}, icon: './images/college.png'},
-			{title: 'ICSGV', location: {lat: 33.994873, lng: -117.884711}, icon: './images/mosque.png'},
+			{title: 'Islamic Center of San Gabriel Valley', location: {lat: 33.994873, lng: -117.884711}, icon: './images/mosque.png'},
 			{title: 'Yogurtland', location: {lat: 34.027874, lng: -117.833771}, icon: './images/frozenyogurt.png'},
 			{title: 'Oak Tree Lanes', location: {lat: 34.035642, lng: -117.805326}, icon: './images/bowling.png'},
 			{title: 'Nogales High School', location: {lat: 34.009556, lng: -117.889152}, icon: './images/highschool.png'},			
@@ -61,9 +61,25 @@ function initMap() {
 			});
 		},
 
+		//sort list items
 		sortList: function() {
 			this.markers.sort();
 		},
+		
+		//when list item is clicked, open corresponding marker's info
+		showInfo: function() {
+			let self = this;
+			for(let i = 0; i < self.markers().length; i++) {
+				$('li').on('click', function() {
+					//check to see which marker corresponds with clicked item list
+					if(self.markers()[i].title === $(this).text()) {
+						marker.infowindow.open(map, marker, self);
+						marker.setAnimation(google.maps.Animation.BOUNCE);
+					}					
+				});
+				
+			}
+		}
 
 		//filter the items using the filter text
 		// filterText: ko.observable(),
@@ -78,8 +94,11 @@ function initMap() {
 	ko.applyBindings(ViewModel);
 	ViewModel.sortList();
 
-	//adding markers to map
+	//call addMarkers
 	ViewModel.addMarker();
+
+	//call showInfo
+	ViewModel.showInfo();
 }
 
 // ********************************************************************
