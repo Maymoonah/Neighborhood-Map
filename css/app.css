@@ -62,7 +62,6 @@
 h2 {
 	color: #fff;
 	margin: 0;
-	/*padding: 10px;*/
 	font-family: 'Indie Flower', cursive;
 	font-size: 30px;
 	margin-left: 10px;
@@ -90,6 +89,10 @@ li {
 	font-family: 'Amaranth', sans-serif;
 	padding: 8px;
 	margin-left: 0;
+}
+
+li:hover {
+	cursor: pointer;
 }
 
 hr {
