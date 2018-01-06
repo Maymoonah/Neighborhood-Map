@@ -20,10 +20,11 @@
 				<button id="filter"><i class="fa fa-filter" aria-hidden="true"></i>Filter</button>
 			</div>
 			<div id="results">
-				<ul data-bind="foreach: markers" id="listItems">
+				<ul data-bind="foreach: markers, click:showInfo()" id="listItems">
 					<li><span data-bind="text: $data.title"></span></li>
 				</ul>
 			</div>
+			
 		</div>
 		
 		<script
