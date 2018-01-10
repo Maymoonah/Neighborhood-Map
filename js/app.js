@@ -32,6 +32,7 @@ function initMap() {
 			{title: 'Chevron', location: {lat: 34.015822, lng: -117.850391}, icon: './images/gas-station.png'},			
 			{title: 'Bank of America', location: {lat: 34.013161, lng: -117.861232}, icon: './images/bank.png'}
 		]),
+
 		//add marker to map
 		addMarker: function() {
 			for(let i = 0; i < this.markers().length; i++) {
@@ -43,12 +44,32 @@ function initMap() {
 					animation: google.maps.Animation.DROP
 				});
 				this.addInfoWindow();
+				this.callAPI();
 			}
 		},
 
 		//add infowindow to marker
 		addInfoWindow: function() {
-			
+			//create info windows
+			infowindow = new google.maps.InfoWindow({
+				content: `<strong>${marker.title}</strong></br>
+				${locInfo}</br>
+				<a href=${wikiUrl}>${siteUrl}</a>`,
+				maxWidth: 200
+			});
+
+			//creates an infowindow 'key' in the marker. (from: https://leewc.com/articles/google-maps-infowindow/)
+			marker.infowindow = infowindow;
+
+			//listen for click on markers
+			google.maps.event.addListener(marker, 'click', function() {
+				this.infowindow.open(map, this);
+				this.setAnimation(google.maps.Animation.BOUNCE);
+			});			
+		},
+
+		//call wikipedia and Flickr APIs
+		callAPI: function() {
 			//Wikipedia AJAK request from Udacity Intro to AJAX with some adjustments
 		    wikiUrl = `http://en.wikipedia.org/w/api.php?action=opensearch&search=${marker.title}&format=json&callback=wikiCallback`;
 		    //if page takes long time to load
@@ -86,22 +107,6 @@ function initMap() {
 			  });
 			});
 
-			//create info windows
-			infowindow = new google.maps.InfoWindow({
-				content: `<strong>${marker.title}</strong></br>
-				${locInfo}</br>
-				<a href=${wikiUrl}>${siteUrl}</a>`,
-				maxWidth: 200
-			});
-
-			//creates an infowindow 'key' in the marker. (from: https://leewc.com/articles/google-maps-infowindow/)
-			marker.infowindow = infowindow;
-
-			//listen for click on markers
-			google.maps.event.addListener(marker, 'click', function() {
-				this.infowindow.open(map, this);
-				this.setAnimation(google.maps.Animation.BOUNCE);
-			});			
 		},
 
 		//sort list items
