@@ -1,6 +1,5 @@
 let markers, locations, ViewModel, marker, infowindow;
-// let data, output, response;
-let locList, url, articleStr;
+let locInfo, url, articleStr, wikiUrl, siteUrl, flickrUrl, pic;
 //Initialize the map
 function initMap() {
 	let map;
@@ -50,8 +49,8 @@ function initMap() {
 		//add infowindow to marker
 		addInfoWindow: function() {
 			
-			//Wikipedia AJAK request from Udacity Intro to AJAX
-		    let wikiUrl = `http://en.wikipedia.org/w/api.php?action=opensearch&search=${marker.title}&format=json&callback=wikiCallback`;
+			//Wikipedia AJAK request from Udacity Intro to AJAX with some adjustments
+		    wikiUrl = `http://en.wikipedia.org/w/api.php?action=opensearch&search=${marker.title}&format=json&callback=wikiCallback`;
 		    //if page takes long time to load
 		    let wikiRequestTimeout = setTimeout(function() {
 		        alert('failed to get wikipedia resources');
@@ -61,23 +60,38 @@ function initMap() {
 		        dataType: 'jsonp',
 		        //callback
 		        success: function(response) {
-		        	console.log(response);
-		            locList = response[1];
-		            for(let i = 0; i < locList.length; i++) {
-		                articleStr = locList[i];
-		                url = `http://en.wikipedia.org/wiki${articleStr}`;
-		                // infowindow.setContent(infowindow.getContent() + '</br>' + `<li><a href=${url}>${articleStr}</a></li>`);
-		                // $wikiElem.append(`<li><a href=${url}>${articleStr}</a></li>`);
-		            }
+		            locInfo = response[2][0];
+		            // console.log(locInfo);
+		            siteUrl = response[3][0];
 		            // stop timeout from happening once things are loaded
 		            clearTimeout(wikiRequestTimeout);
+		            infowindow.setContent(`<strong>${marker.title}</strong> </br>
+		             ${locInfo} </br> 
+		             <a href=${wikiUrl}>${siteUrl}</a></br>
+		             <img src=${pic}>`);
+		            // return marker;
 		        }
 		    });
+
+		    //Flickr API
+		    flickrUrl = "http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?";
+			$.getJSON( flickrUrl, {
+			tags: marker.title,
+			tagmode: "any",
+			format: "json"
+			})
+			.done(function( data ) {
+			  $.each( data.items, function( i, item ) {
+			  	pic = item.media.m;
+			  });
+			});
+
 			//create info windows
 			infowindow = new google.maps.InfoWindow({
 				content: `<strong>${marker.title}</strong></br>
-				<li><a href=${url}>${articleStr}</a></li>
-				`
+				${locInfo}</br>
+				<a href=${wikiUrl}>${siteUrl}</a>`,
+				maxWidth: 200
 			});
 
 			//creates an infowindow 'key' in the marker. (from: https://leewc.com/articles/google-maps-infowindow/)
