@@ -1,4 +1,6 @@
 let markers, locations, ViewModel, marker, infowindow;
+// let data, output, response;
+let locList, url, articleStr;
 //Initialize the map
 function initMap() {
 	let map;
@@ -47,9 +49,35 @@ function initMap() {
 
 		//add infowindow to marker
 		addInfoWindow: function() {
+			
+			//Wikipedia AJAK request from Udacity Intro to AJAX
+		    let wikiUrl = `http://en.wikipedia.org/w/api.php?action=opensearch&search=${marker.title}&format=json&callback=wikiCallback`;
+		    //if page takes long time to load
+		    let wikiRequestTimeout = setTimeout(function() {
+		        alert('failed to get wikipedia resources');
+		    }, 8000);
+		    $.ajax({
+		        url: wikiUrl,
+		        dataType: 'jsonp',
+		        //callback
+		        success: function(response) {
+		        	console.log(response);
+		            locList = response[1];
+		            for(let i = 0; i < locList.length; i++) {
+		                articleStr = locList[i];
+		                url = `http://en.wikipedia.org/wiki${articleStr}`;
+		                // infowindow.setContent(infowindow.getContent() + '</br>' + `<li><a href=${url}>${articleStr}</a></li>`);
+		                // $wikiElem.append(`<li><a href=${url}>${articleStr}</a></li>`);
+		            }
+		            // stop timeout from happening once things are loaded
+		            clearTimeout(wikiRequestTimeout);
+		        }
+		    });
 			//create info windows
 			infowindow = new google.maps.InfoWindow({
-				content: `<strong>${marker.title}</strong>`
+				content: `<strong>${marker.title}</strong></br>
+				<li><a href=${url}>${articleStr}</a></li>
+				`
 			});
 
 			//creates an infowindow 'key' in the marker. (from: https://leewc.com/articles/google-maps-infowindow/)
@@ -58,7 +86,8 @@ function initMap() {
 			//listen for click on markers
 			google.maps.event.addListener(marker, 'click', function() {
 				this.infowindow.open(map, this);
-			});
+				this.setAnimation(google.maps.Animation.BOUNCE);
+			});			
 		},
 
 		//sort list items
@@ -73,14 +102,16 @@ function initMap() {
 				$('li').on('click', function() {
 					//check to see which marker corresponds with clicked item list
 					if(self.markers()[i].title === $(this).text()) {
-						marker.infowindow.open(map, marker, self);
+						// marker.position = self.markers()[i].location;
+						// console.log(self.markers()[i].location);
+						self.addInfoWindow();
+						marker.infowindow.open(map, marker);
 						marker.setAnimation(google.maps.Animation.BOUNCE);
 					}					
 				});
 				
 			}
 		}
-
 		//filter the items using the filter text
 		// filterText: ko.observable(),
 		// filteredLoc: ko.computed(function() {		
@@ -88,6 +119,8 @@ function initMap() {
 		// 			 return ko.utils.stringStartsWith(marker.location.toLowerCase(), this.filterText());
 		// 		});
 		// })
+
+		
 	};
 
 	//apply bindings and sort list
@@ -97,8 +130,9 @@ function initMap() {
 	//call addMarkers
 	ViewModel.addMarker();
 
-	//call showInfo
-	ViewModel.showInfo();
+		
+	
+	
 }
 
 // ********************************************************************
