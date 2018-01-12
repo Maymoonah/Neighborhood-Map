@@ -53,8 +53,8 @@ function initMap() {
 			//create info windows
 			infowindow = new google.maps.InfoWindow({
 				content: `<strong>${marker.title}</strong></br>
-				${locInfo}</br>
-				<a href=${wikiUrl}>${siteUrl}</a>`,
+				${locInfo}</br> 
+				<a href=${wikiUrl}>${siteUrl}</a>`, //locInfo & wikiUrl & siteUrl ---> (undefined)
 				maxWidth: 200
 			});
 
@@ -90,7 +90,6 @@ function initMap() {
 		             ${locInfo} </br> 
 		             <a href=${wikiUrl}>${siteUrl}</a></br>
 		             <img src=${pic}>`);
-		            // return marker;
 		        }
 		    });
 
@@ -106,6 +105,17 @@ function initMap() {
 			  	pic = item.media.m;
 			  });
 			});
+
+			//Instagram API
+			$.ajax({
+		        type: 'GET',
+		        dataType: 'jsonp',
+		        url: `https://api.instagram.com/v1/tags/${marker.title}?access_token==258514341.5d67eab.412681afe33840d8a3de0d2f3d98b763`,
+		        //callback
+		        success: function(response) {
+		            console.log(response);
+		        }
+		    });
 
 		},
 
@@ -130,14 +140,14 @@ function initMap() {
 				});
 				
 			}
-		}
+		},
 		//filter the items using the filter text
-		// filterText: ko.observable(),
-		// filteredLoc: ko.computed(function() {		
-		// 		return ko.utils.arrayFilter(this.markers(), function(marker) {
-		// 			 return ko.utils.stringStartsWith(marker.location.toLowerCase(), this.filterText());
-		// 		});
-		// })
+		filterText: ko.observable(''),
+		filteredLoc: ko.computed(function() {		
+				return ko.utils.arrayFilter(this.markers, function(marker) {
+					 return ko.utils.stringStartsWith(marker.title.toLowerCase(), this.filterText());
+				});
+		})
 
 		
 	};
