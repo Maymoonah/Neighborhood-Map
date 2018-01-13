@@ -35,36 +35,37 @@ function initMap() {
 
 		//add marker to map
 		addMarker: function() {
-			for(let i = 0; i < this.markers().length; i++) {
+			let self = this;
+			for(let i = 0; i < self.markers().length; i++) {
 				marker = new google.maps.Marker({
-					position: this.markers()[i].location,
+					position: self.markers()[i].location,
 					map: map,
-					title: this.markers()[i].title,
-					icon: this.markers()[i].icon,
+					title: self.markers()[i].title,
+					icon: self.markers()[i].icon,
 					animation: google.maps.Animation.DROP
 				});
-				this.addInfoWindow();
-				this.callAPI();
+				self.addInfoWindow();
+				self.callAPI();
 			}
 		},
 
 		//add infowindow to marker
 		addInfoWindow: function() {
+			let self = this;
 			//create info windows
-			infowindow = new google.maps.InfoWindow({
-				content: `<strong>${marker.title}</strong></br>
-				${locInfo}</br> 
-				<a href=${wikiUrl}>${siteUrl}</a>`, //locInfo & wikiUrl & siteUrl ---> (undefined)
-				maxWidth: 200
-			});
+			infowindow = new google.maps.InfoWindow({maxWidth: 200});
 
 			//creates an infowindow 'key' in the marker. (from: https://leewc.com/articles/google-maps-infowindow/)
-			marker.infowindow = infowindow;
+			// marker.infowindow = infowindow;
 
 			//listen for click on markers
 			google.maps.event.addListener(marker, 'click', function() {
-				this.infowindow.open(map, this);
+				infowindow.open(map, this);
 				this.setAnimation(google.maps.Animation.BOUNCE);
+				infowindow.setContent(`<strong>${marker.title}</strong> </br>
+		            ${locInfo} </br> 
+		            <a href=${wikiUrl}>${siteUrl}</a></br>
+		            <img src=${pic}>`, this);
 			});			
 		},
 
@@ -81,15 +82,11 @@ function initMap() {
 		        dataType: 'jsonp',
 		        //callback
 		        success: function(response) {
-		            locInfo = response[2][0];
+		           locInfo = response[2][0];
 		            // console.log(locInfo);
 		            siteUrl = response[3][0];
 		            // stop timeout from happening once things are loaded
 		            clearTimeout(wikiRequestTimeout);
-		            infowindow.setContent(`<strong>${marker.title}</strong> </br>
-		             ${locInfo} </br> 
-		             <a href=${wikiUrl}>${siteUrl}</a></br>
-		             <img src=${pic}>`);
 		        }
 		    });
 
@@ -107,15 +104,15 @@ function initMap() {
 			});
 
 			//Instagram API
-			$.ajax({
-		        type: 'GET',
-		        dataType: 'jsonp',
-		        url: `https://api.instagram.com/v1/tags/${marker.title}?access_token==258514341.5d67eab.412681afe33840d8a3de0d2f3d98b763`,
-		        //callback
-		        success: function(response) {
-		            console.log(response);
-		        }
-		    });
+			// $.ajax({
+		 //        type: 'GET',
+		 //        dataType: 'jsonp',
+		 //        url: `https://api.instagram.com/v1/tags/${marker.title}?access_token==258514341.5d67eab.412681afe33840d8a3de0d2f3d98b763`,
+		 //        //callback
+		 //        success: function(response) {
+		 //            console.log(response);
+		 //        }
+		 //    });
 
 		},
 
@@ -142,14 +139,12 @@ function initMap() {
 			}
 		},
 		//filter the items using the filter text
-		filterText: ko.observable(''),
-		filteredLoc: ko.computed(function() {		
-				return ko.utils.arrayFilter(this.markers, function(marker) {
-					 return ko.utils.stringStartsWith(marker.title.toLowerCase(), this.filterText());
-				});
-		})
-
-		
+		// filterText: ko.observable(''),
+		// filteredLoc: ko.computed(function() {		
+		// 		return ko.utils.arrayFilter(this.markers, function(marker) {
+		// 			 return ko.utils.stringStartsWith(marker.title.toLowerCase(), this.filterText());
+		// 		});
+		// })
 	};
 
 	//apply bindings and sort list
@@ -157,11 +152,7 @@ function initMap() {
 	ViewModel.sortList();
 
 	//call addMarkers
-	ViewModel.addMarker();
-
-		
-	
-	
+	ViewModel.addMarker();	
 }
 
 // ********************************************************************
