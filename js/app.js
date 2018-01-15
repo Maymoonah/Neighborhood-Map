@@ -108,137 +108,27 @@ function initMap() {
 			});
 		},
 
-		// SelectedName: ko.observable('')
-
-		//when list item is clicked, open corresponding marker's info
-		// showInfo: function() {
-		// 	let self = this;
-		// 	for(let i = 0; i < self.markers().length; i++) {
-		// 		$('li').on('click', function() {
-		// 			//check to see which marker corresponds with clicked item list
-		// 			if(self.markers()[i].title === $(this).text()) {
-		// 				// marker.position = self.markers()[i].location;
-		// 				// console.log(self.markers()[i].location);
-		// 				self.addInfoWindow();
-		// 				marker.infowindow.open(map, marker);
-		// 				marker.setAnimation(google.maps.Animation.BOUNCE);
-		// 			}					
-		// 		});
-				
-		// 	}
-		// },
 		// filter the items using the filter text
 		filterText: ko.observable(''),
 		filteredLoc: ko.computed(function() {
 			let self = this;
 			if (!self.filterText) {
 		        return self.markers;
+		        console.log(filterText);
 		    } else {
 				return ko.utils.arrayFilter(self.markers, function(item) {
 					return ko.utils.stringStartsWith(item.title.toLowerCase(), self.filterText());
+					console.log(filterText);
 				});
 			}		
 		})
 
 
 	};
-	$('#search').on('keyup', function() {
-		console.log(ViewModel.filterText());		
-	});
-
-	//Filter
-	// ViewModel.locations = ko.computed(function() {
-	// 	let results = ViewModel.markers(),
-	// 		filterByLocation = ViewModel.SelectedName();
-	// 	if(filterByLocation) {
-	// 		results = ko.utils.arrayFilter(results, function(loc) {
-	// 			return loc.title === filterByLocation;
-	// 		});
-	// 		return results;
-	// 	}	
-	// });
-
-	// ViewModel.locationName = ko.computed(function() {
-	// 	let results = ko.utils.arrayMap(ViewModel.markers(), function(loc) {
-	// 		return loc.title;
-	// 	});
-	// 	return result;
-	// });
-
-	// $.getJSON("products.json", function(data) {
-	// 	myViewModel.allCategories(data.categories);
-	// });
-
-
-	// $('#search').on('keydown', ViewModel.filteredLoc);
-
+	
 	//apply bindings and sort list
 	ko.applyBindings(ViewModel);
 
 	//call addMarkers
 	ViewModel.addMarker();	
 }
-// ViewModel.filteredItems = ko.computed(function() {
-//     var filter = filter().toLowerCase();
-//     if (!filter) {
-//         return this.markers();
-//     } else {
-//         return ko.utils.arrayFilter(this.markers(), function(item) {
-//             return ko.utils.stringStartsWith(item.title().toLowerCase(), filter);
-//         });
-//     }
-// }, ViewModel);
-
-// ********************************************************************
-
-//create place autocomplete
-	// let input = document.getElementById('search');
-	// let autocomplete = new google.maps.places.Autocomplete(input);
-
-	//get search results
-	// autocomplete.addListener('place_changed', function() {
-	// 	autoLocation = autocomplete.getPlace();
-	// 	// add new location to markers array
-	// 	ViewModel.markers.push({
-	// 		title: autoLocation.name,
-	// 		locations: {
-	// 			lat: autoLocation.geometry.location.lat(),
-	// 			lng: autoLocation.geometry.location.lng()
-	// 		}
-	// 	});
-
-	// 	//add marker and info window for new location to the map
-	// 	marker = new google.maps.Marker({
-	// 		position: {
-	// 			lat: autoLocation.geometry.location.lat(),
-	// 			lng: autoLocation.geometry.location.lng()
-	// 		},
-	// 		map: map,
-	// 		title: autoLocation.name,
-	// 		animation: google.maps.Animation.DROP,
-	// 	});
-
-	// 	//clear the input box
-	// 	document.getElementById('search').value = '';
-
-	// 	//add info window for new marker
-	// 	ViewModel.addInfoWindow();
-
-	// 	//bias results for auto complete to bounds of current map area
-	// 	autocomplete.bindTo('bounds', map);
-	// });
-
-// show/hide sidebar when bars icon is clicked
-// $('#bars').on('click', function() {
-// 	if($('.listView').css('visibility', 'visible')) {
-// 		$('#map').css('width', '100%');
-// 		$('.mapNav').css('width', '100%');
-// 		$('.listView').css('visibility', 'hidden');
-// 		$('.navbar').css('visibility', 'hidden');
-// 	} else {
-// 		$('#map').css('width', '100%');
-// 		$('.mapNav').css('width', '100%');
-// 		$('.listView').css('visibility', 'visible');
-// 		$('.navbar').css('visibility', 'visible');
-// 	}
-// });
