@@ -16,12 +16,12 @@
 		<div id="map"></div>
 		<div class="listView">
 			<div id="input">
-				<input type="text" id="search">
+				<input type="text" id="search" data-bind="value: filterText, valueUpdate: 'afterkeydown'">
 				<button id="filter"><i class="fa fa-filter" aria-hidden="true"></i>Filter</button>
 			</div>
 			<div id="results">
-				<ul data-bind="foreach: markers, click:showInfo()" id="listItems">
-					<li><span data-bind="text: $data.title"></span></li>
+				<ul data-bind="foreach: filteredLoc" id="listItems"> <!--bind showInfo on click -->
+					<li><span data-bind="text: title"></span></li>
 				</ul>
 			</div>
 			
