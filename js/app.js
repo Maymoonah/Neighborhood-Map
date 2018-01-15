@@ -42,7 +42,7 @@ function initMap() {
 					map: map,
 					title: self.markers()[i].title,
 					icon: self.markers()[i].icon,
-					animation: google.maps.Animation.DROP
+					animation: google.maps.Animation.DROP,
 				});
 				self.addInfoWindow();
 				self.callAPI();
@@ -61,11 +61,16 @@ function initMap() {
 			//listen for click on markers
 			google.maps.event.addListener(marker, 'click', function() {
 				infowindow.open(map, this);
-				this.setAnimation(google.maps.Animation.BOUNCE);
-				infowindow.setContent(`<strong>${marker.title}</strong> </br>
+				//if marker is bouncing, set animation to null, otherwise set animation to bounce
+				if(this.getAnimation() !== null) {
+					this.setAnimation(null);
+				} else {
+					this.setAnimation(google.maps.Animation.BOUNCE);					
+				}
+				infowindow.setContent(`<h3><strong>${this.title}</strong></h3></br>
 		            ${locInfo} </br> 
 		            <a href=${wikiUrl}>${siteUrl}</a></br>
-		            <img src=${pic}>`, this);
+		            <img src=${pic}>`);
 			});			
 		},
 
@@ -83,7 +88,6 @@ function initMap() {
 		        //callback
 		        success: function(response) {
 		           locInfo = response[2][0];
-		            // console.log(locInfo);
 		            siteUrl = response[3][0];
 		            // stop timeout from happening once things are loaded
 		            clearTimeout(wikiRequestTimeout);
@@ -98,62 +102,92 @@ function initMap() {
 			format: "json"
 			})
 			.done(function( data ) {
-			  $.each( data.items, function( i, item ) {
-			  	pic = item.media.m;
-			  });
-			});
-
-			//Instagram API
-			// $.ajax({
-		 //        type: 'GET',
-		 //        dataType: 'jsonp',
-		 //        url: `https://api.instagram.com/v1/tags/${marker.title}?access_token==258514341.5d67eab.412681afe33840d8a3de0d2f3d98b763`,
-		 //        //callback
-		 //        success: function(response) {
-		 //            console.log(response);
-		 //        }
-		 //    });
-
-		},
-
-		//sort list items
-		sortList: function() {
-			this.markers.sort();
-		},
-		
-		//when list item is clicked, open corresponding marker's info
-		showInfo: function() {
-			let self = this;
-			for(let i = 0; i < self.markers().length; i++) {
-				$('li').on('click', function() {
-					//check to see which marker corresponds with clicked item list
-					if(self.markers()[i].title === $(this).text()) {
-						// marker.position = self.markers()[i].location;
-						// console.log(self.markers()[i].location);
-						self.addInfoWindow();
-						marker.infowindow.open(map, marker);
-						marker.setAnimation(google.maps.Animation.BOUNCE);
-					}					
+				$.each( data.items, function( i, item ) {
+					pic = item.media.m;
 				});
-				
-			}
+			});
 		},
-		//filter the items using the filter text
-		// filterText: ko.observable(''),
-		// filteredLoc: ko.computed(function() {		
-		// 		return ko.utils.arrayFilter(this.markers, function(marker) {
-		// 			 return ko.utils.stringStartsWith(marker.title.toLowerCase(), this.filterText());
+
+		// SelectedName: ko.observable('')
+
+		//when list item is clicked, open corresponding marker's info
+		// showInfo: function() {
+		// 	let self = this;
+		// 	for(let i = 0; i < self.markers().length; i++) {
+		// 		$('li').on('click', function() {
+		// 			//check to see which marker corresponds with clicked item list
+		// 			if(self.markers()[i].title === $(this).text()) {
+		// 				// marker.position = self.markers()[i].location;
+		// 				// console.log(self.markers()[i].location);
+		// 				self.addInfoWindow();
+		// 				marker.infowindow.open(map, marker);
+		// 				marker.setAnimation(google.maps.Animation.BOUNCE);
+		// 			}					
 		// 		});
-		// })
+				
+		// 	}
+		// },
+		// filter the items using the filter text
+		filterText: ko.observable(''),
+		filteredLoc: ko.computed(function() {
+			let self = this;
+			if (!self.filterText) {
+		        return self.markers;
+		    } else {
+				return ko.utils.arrayFilter(self.markers, function(item) {
+					return ko.utils.stringStartsWith(item.title.toLowerCase(), self.filterText());
+				});
+			}		
+		})
+
+
 	};
+	$('#search').on('keyup', function() {
+		console.log(ViewModel.filterText());		
+	});
+
+	//Filter
+	// ViewModel.locations = ko.computed(function() {
+	// 	let results = ViewModel.markers(),
+	// 		filterByLocation = ViewModel.SelectedName();
+	// 	if(filterByLocation) {
+	// 		results = ko.utils.arrayFilter(results, function(loc) {
+	// 			return loc.title === filterByLocation;
+	// 		});
+	// 		return results;
+	// 	}	
+	// });
+
+	// ViewModel.locationName = ko.computed(function() {
+	// 	let results = ko.utils.arrayMap(ViewModel.markers(), function(loc) {
+	// 		return loc.title;
+	// 	});
+	// 	return result;
+	// });
+
+	// $.getJSON("products.json", function(data) {
+	// 	myViewModel.allCategories(data.categories);
+	// });
+
+
+	// $('#search').on('keydown', ViewModel.filteredLoc);
 
 	//apply bindings and sort list
 	ko.applyBindings(ViewModel);
-	ViewModel.sortList();
 
 	//call addMarkers
 	ViewModel.addMarker();	
 }
+// ViewModel.filteredItems = ko.computed(function() {
+//     var filter = filter().toLowerCase();
+//     if (!filter) {
+//         return this.markers();
+//     } else {
+//         return ko.utils.arrayFilter(this.markers(), function(item) {
+//             return ko.utils.stringStartsWith(item.title().toLowerCase(), filter);
+//         });
+//     }
+// }, ViewModel);
 
 // ********************************************************************
 
