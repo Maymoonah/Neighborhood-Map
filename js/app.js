@@ -111,12 +111,11 @@ function initMap() {
 		// filter the items using the filter text
 		this.filterText = ko.observable('');
 		this.filteredLoc = ko.computed(function() {
-			let self = this;
 			if (!this.filterText) {
-		        return self.markers;
+		        return this.markers;
 		    } else {
 				return ko.utils.arrayFilter(this.markers, function(item) {
-					return ko.utils.stringStartsWith(item.title.toLowerCase(), this.filterText());
+					return ko.utils.stringStartsWith(item.title.toLowerCase(), this.filterText);
 					console.log(filterText);
 				});
 			}		
