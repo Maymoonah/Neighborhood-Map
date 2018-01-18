@@ -13,6 +13,7 @@ function initMap() {
 
 	//View Model
 	ViewModel = function() {
+		let self = this;
 		this.markers = ko.observableArray([
 			{title: 'Krispy Kreme', location: {lat: 33.994923, lng: -117.930837}, icon: './images/donut.png'},
 			{title: 'Mt. San Antonio College', location: {lat: 34.047693, lng: -117.844858}, icon: './images/college.png'},
@@ -35,7 +36,6 @@ function initMap() {
 
 		//add marker to map
 		this.addMarker = function() {
-			let self = this;
 			for(let i = 0; i < self.markers().length; i++) {
 				marker = new google.maps.Marker({
 					position: self.markers()[i].location,
@@ -51,7 +51,6 @@ function initMap() {
 
 		//add infowindow to marker
 		this.addInfoWindow = function() {
-			let self = this;
 			//create info windows
 			infowindow = new google.maps.InfoWindow({maxWidth: 200});
 
@@ -109,17 +108,23 @@ function initMap() {
 		}
 
 		// filter the items using the filter text
-		this.filterText = ko.observable();
+		this.filterText = ko.observable('');
 		this.filteredLoc = ko.computed(function() {
-			let self = this;
 			if (!self.filterText) {
 		        return self.markers;
 		    } else {
 				return ko.utils.arrayFilter(self.markers(), function(item) {
-					return ko.utils.stringStartsWith(item.title.toLowerCase(), self.filterText());
-					console.log(self.filterText());
+					// from https://github.com/knockout/knockout/issues/401
+					let stringStartsWith = function (string, startsWith) {          
+					    string = string || "";
+					    if (startsWith.length > string.length)
+					        return false;
+					    return string.substring(0, startsWith.length) === startsWith;
+					}
+					return stringStartsWith(item.title.toLowerCase(), self.filterText());
 				});
-			}		
+			}			
+
 		});
 		//call addMarkers
 		this.addMarker();
