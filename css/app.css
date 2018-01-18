@@ -4,10 +4,6 @@
 	float: right;
 }
 
-#input {
-	margin: 15px;
-}
-
 #filter {
 	padding: 10px;
 	font-weight: bold;
@@ -72,8 +68,14 @@ i {
 	color: #fff;
 }
 input {
-	width: 200px;
+	margin: 0;
+	width: calc(100% - 24px);
 	padding: 10px;
+}
+
+input:focus {
+	box-shadow: 0 0 7px rgba(81, 203, 238, 1);
+	border: 2px solid rgba(81, 203, 238, 1);
 }
 
 html, body {
