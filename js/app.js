@@ -110,7 +110,6 @@ function initMap() {
 			self.markers()[i].marker.setVisible(true);
 		}
 			if (!self.filterText) {
-				marker.setVisible(true);
 		        return self.markers;
 		    } else {
 				return ko.utils.arrayFilter(self.markers(), function(item) {
