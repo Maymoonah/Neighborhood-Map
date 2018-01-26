@@ -1,5 +1,7 @@
+//declare variables on global level
 let markers, locations, ViewModel, marker, infowindow;
-let locInfo, url, articleStr, wikiUrl, siteUrl, flickrUrl, pic;
+
+
 //Initialize the map
 function initMap() {
 	let map;
@@ -13,6 +15,7 @@ function initMap() {
 
 	//View Model
 	ViewModel = function() {
+		let locInfo, url, articleStr, wikiUrl, siteUrl, flickrUrl, pic;
 		let self = this;
 		this.markers = ko.observableArray([
 			{title: 'Krispy Kreme', location: {lat: 33.994923, lng: -117.930837}, icon: './images/donut.png'},
@@ -54,23 +57,16 @@ function initMap() {
 			//create info windows
 			infowindow = new google.maps.InfoWindow({maxWidth: 200});
 
-			//creates an infowindow 'key' in the marker. (from: https://leewc.com/articles/google-maps-infowindow/)
-			// marker.infowindow = infowindow;
-
 			//listen for click on markers
 			google.maps.event.addListener(marker, 'click', function() {
 				infowindow.open(map, this);
-				//if marker is bouncing, set animation to null, otherwise set animation to bounce
-				if(this.getAnimation() !== null) {
-					this.setAnimation(null);
-				} else {
-					this.setAnimation(google.maps.Animation.BOUNCE);					
-				}
+				this.setAnimation(google.maps.Animation.BOUNCE);					
 				infowindow.setContent(`<h3><strong>${this.title}</strong></h3></br>
 		            ${locInfo} </br> 
 		            <a href=${wikiUrl}>${siteUrl}</a></br>
-		            <img src=${pic}>`);
-			});			
+		            <img src=${pic}>`
+		        );
+			});	
 		}
 
 		//call wikipedia and Flickr APIs
@@ -81,15 +77,15 @@ function initMap() {
 		    let wikiRequestTimeout = setTimeout(function() {
 		        alert('failed to get wikipedia resources');
 		    }, 8000);
-		    $.ajax({
+		    let ajax = $.ajax({
 		        url: wikiUrl,
 		        dataType: 'jsonp',
 		        //callback
 		        success: function(response) {
 		           locInfo = response[2][0];
-		            siteUrl = response[3][0];
-		            // stop timeout from happening once things are loaded
-		            clearTimeout(wikiRequestTimeout);
+		           siteUrl = response[3][0];
+		           // stop timeout from happening once things are loaded
+		           clearTimeout(wikiRequestTimeout);
 		        }
 		    });
 
@@ -110,100 +106,33 @@ function initMap() {
 		// filter the items using the filter text
 		this.filterText = ko.observable('');
 		this.filteredLoc = ko.computed(function() {
+			for (var i = 0; i < self.markers.length; i++) {
+			self.markers()[i].marker.setVisible(true);
+		}
 			if (!self.filterText) {
+				marker.setVisible(true);
 		        return self.markers;
 		    } else {
 				return ko.utils.arrayFilter(self.markers(), function(item) {
 					// from https://github.com/knockout/knockout/issues/401
-					let stringStartsWith = function (string, startsWith) {          
+					let stringStartsWith = function (string, startsWith) {
 					    string = string || "";
 					    if (startsWith.length > string.length)
 					        return false;
 					    return string.substring(0, startsWith.length) === startsWith;
 					}
+					let match = stringStartsWith(item.title.toLowerCase(), self.filterText());
+					item.marker.setVisible(match);
+					return match;
 					return stringStartsWith(item.title.toLowerCase(), self.filterText());
 				});
-			}			
-
+			}
 		});
+
 		//call addMarkers
 		this.addMarker();
 	}
-
-	//apply bindings and sort list
-	ko.applyBindings(new ViewModel());	
+	// let myView = new ViewModel();
+	//apply bindings
+	ko.applyBindings(new ViewModel());
 }
-
-	//when list item is clicked, open corresponding marker's info
-	// showInfo: function() {
-	// 	let self = this;
-	// 	for(let i = 0; i < self.markers().length; i++) {
-	// 		$('li').on('click', function() {
-	// 			//check to see which marker corresponds with clicked item list
-	// 			if(self.markers()[i].title === $(this).text()) {
-	// 				// marker.position = self.markers()[i].location;
-	// 				// console.log(self.markers()[i].location);
-	// 				self.addInfoWindow();
-	// 				marker.infowindow.open(map, marker);
-	// 				marker.setAnimation(google.maps.Animation.BOUNCE);
-	// 			}					
-	// 		});
-			
-	// 	}
-	// },
-	
-	
-
-// ********************************************************************
-
-//create place autocomplete
-	// let input = document.getElementById('search');
-	// let autocomplete = new google.maps.places.Autocomplete(input);
-
-	//get search results
-	// autocomplete.addListener('place_changed', function() {
-	// 	autoLocation = autocomplete.getPlace();
-	// 	// add new location to markers array
-	// 	ViewModel.markers.push({
-	// 		title: autoLocation.name,
-	// 		locations: {
-	// 			lat: autoLocation.geometry.location.lat(),
-	// 			lng: autoLocation.geometry.location.lng()
-	// 		}
-	// 	});
-
-	// 	//add marker and info window for new location to the map
-	// 	marker = new google.maps.Marker({
-	// 		position: {
-	// 			lat: autoLocation.geometry.location.lat(),
-	// 			lng: autoLocation.geometry.location.lng()
-	// 		},
-	// 		map: map,
-	// 		title: autoLocation.name,
-	// 		animation: google.maps.Animation.DROP,
-	// 	});
-
-	// 	//clear the input box
-	// 	document.getElementById('search').value = '';
-
-	// 	//add info window for new marker
-	// 	ViewModel.addInfoWindow();
-
-	// 	//bias results for auto complete to bounds of current map area
-	// 	autocomplete.bindTo('bounds', map);
-	// });
-
-// show/hide sidebar when bars icon is clicked
-// $('#bars').on('click', function() {
-// 	if($('.listView').css('visibility', 'visible')) {
-// 		$('#map').css('width', '100%');
-// 		$('.mapNav').css('width', '100%');
-// 		$('.listView').css('visibility', 'hidden');
-// 		$('.navbar').css('visibility', 'hidden');
-// 	} else {
-// 		$('#map').css('width', '100%');
-// 		$('.mapNav').css('width', '100%');
-// 		$('.listView').css('visibility', 'visible');
-// 		$('.navbar').css('visibility', 'visible');
-// 	}
-// });
