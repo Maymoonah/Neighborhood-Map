@@ -47,8 +47,14 @@ function initMap() {
 					icon: self.markers()[i].icon,
 					animation: google.maps.Animation.DROP,
 				});
+				//bind each marker to its location
+				self.markers()[i].marker = marker;
+
+				//call functions
 				self.addInfoWindow();
 				self.callAPI();
+				self.filterMarkers();
+
 			}
 		}
 
@@ -106,9 +112,6 @@ function initMap() {
 		// filter the items using the filter text
 		this.filterText = ko.observable('');
 		this.filteredLoc = ko.computed(function() {
-			for (var i = 0; i < self.markers.length; i++) {
-			self.markers()[i].marker.setVisible(true);
-		}
 			if (!self.filterText) {
 		        return self.markers;
 		    } else {
@@ -120,13 +123,41 @@ function initMap() {
 					        return false;
 					    return string.substring(0, startsWith.length) === startsWith;
 					}
-					let match = stringStartsWith(item.title.toLowerCase(), self.filterText());
-					item.marker.setVisible(match);
-					return match;
 					return stringStartsWith(item.title.toLowerCase(), self.filterText());
 				});
 			}
 		});
+
+		//filter markers
+		self.filterMarkers = function() {
+			$('#search').on('keyup', function() {
+				for(let i = 0; i < self.markers().length; i++) {
+					self.markers()[i].marker.setVisible(false);
+				}
+				for(let i = 0; i < self.filteredLoc().length; i++) {
+					self.filteredLoc()[i].marker.setVisible(true);
+					infowindow.open(map, self.filteredLoc()[i].marker);
+				}
+			});
+		}
+
+		// when list item is clicked, open corresponding marker's info
+		this.showInfo = function() {
+			// for(let i = 0; i < self.markers().length; i++) {
+			// 	$('li').on('click', function() {
+			// 		//check to see which marker corresponds with clicked item list
+			// 		if(self.markers()[i].title === $(this).text()) {
+			// 			// marker.position = self.markers()[i].location;
+			// 			// console.log(self.markers()[i].location);
+			// 			self.addInfoWindow();
+			// 			marker.infowindow.open(map, marker);
+			// 			marker.setAnimation(google.maps.Animation.BOUNCE);
+			// 		}					
+			// 	});
+				
+			// }
+			// self.addInfoWindow();
+		}
 
 		//call addMarkers
 		this.addMarker();
@@ -135,3 +166,60 @@ function initMap() {
 	//apply bindings
 	ko.applyBindings(new ViewModel());
 }
+
+
+	
+
+// ********************************************************************
+
+//create place autocomplete
+	// let input = document.getElementById('search');
+	// let autocomplete = new google.maps.places.Autocomplete(input);
+
+	//get search results
+	// autocomplete.addListener('place_changed', function() {
+	// 	autoLocation = autocomplete.getPlace();
+	// 	// add new location to markers array
+	// 	ViewModel.markers.push({
+	// 		title: autoLocation.name,
+	// 		locations: {
+	// 			lat: autoLocation.geometry.location.lat(),
+	// 			lng: autoLocation.geometry.location.lng()
+	// 		}
+	// 	});
+
+	// 	//add marker and info window for new location to the map
+	// 	marker = new google.maps.Marker({
+	// 		position: {
+	// 			lat: autoLocation.geometry.location.lat(),
+	// 			lng: autoLocation.geometry.location.lng()
+	// 		},
+	// 		map: map,
+	// 		title: autoLocation.name,
+	// 		animation: google.maps.Animation.DROP,
+	// 	});
+
+	// 	//clear the input box
+	// 	document.getElementById('search').value = '';
+
+	// 	//add info window for new marker
+	// 	ViewModel.addInfoWindow();
+
+	// 	//bias results for auto complete to bounds of current map area
+	// 	autocomplete.bindTo('bounds', map);
+	// });
+
+// show/hide sidebar when bars icon is clicked
+// $('#bars').on('click', function() {
+// 	if($('.listView').css('visibility', 'visible')) {
+// 		$('#map').css('width', '100%');
+// 		$('.mapNav').css('width', '100%');
+// 		$('.listView').css('visibility', 'hidden');
+// 		$('.navbar').css('visibility', 'hidden');
+// 	} else {
+// 		$('#map').css('width', '100%');
+// 		$('.mapNav').css('width', '100%');
+// 		$('.listView').css('visibility', 'visible');
+// 		$('.navbar').css('visibility', 'visible');
+// 	}
+// });
