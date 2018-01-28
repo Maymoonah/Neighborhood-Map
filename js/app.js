@@ -39,23 +39,25 @@ function initMap() {
 
 		//add marker to map
 		this.addMarker = function() {
-			for(let i = 0; i < self.markers().length; i++) {
+			self.markers().forEach(function(element) {
 				marker = new google.maps.Marker({
-					position: self.markers()[i].location,
+					position: element.location,
 					map: map,
-					title: self.markers()[i].title,
-					icon: self.markers()[i].icon,
+					title: element.title,
+					icon: element.icon,
 					animation: google.maps.Animation.DROP,
 				});
 				//bind each marker to its location
-				self.markers()[i].marker = marker;
+				element.marker = marker;
 
 				//call functions
 				self.addInfoWindow();
 				self.callAPI();
 				self.filterMarkers();
-
-			}
+			});
+			// for(let i = 0; i < self.markers().length; i++) {
+				
+			// }
 		}
 
 		//add infowindow to marker
@@ -130,15 +132,15 @@ function initMap() {
 
 		//filter markers
 		self.filterMarkers = function() {
-			$('#search').on('keyup', function() {
-				for(let i = 0; i < self.markers().length; i++) {
-					self.markers()[i].marker.setVisible(false);
-				}
-				for(let i = 0; i < self.filteredLoc().length; i++) {
-					self.filteredLoc()[i].marker.setVisible(true);
-					infowindow.open(map, self.filteredLoc()[i].marker);
-				}
-			});
+			for(let i = 0; i < self.markers().length; i++) {
+				//close any infowindows that may be open
+				infowindow.close();
+				self.markers()[i].marker.setVisible(false);
+			}
+			for(let i = 0; i < self.filteredLoc().length; i++) {
+				self.filteredLoc()[i].marker.setVisible(true);
+				infowindow.open(map, self.filteredLoc()[i].marker);
+			}
 		}
 
 		// when list item is clicked, open corresponding marker's info
