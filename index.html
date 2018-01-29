@@ -19,8 +19,8 @@
 				<input type="text" id="search" data-bind="value: filterText, valueUpdate: 'afterkeydown'" placeholder="Enter Filter Here ...">
 			</div>
 			<div id="results">
-				<ul data-bind="foreach: filteredLoc" id="listItems"> <!--bind showInfo on click -->
-					<li id="loc"><span data-bind="text: title"></span></li>
+				<ul data-bind="foreach: filteredLoc" id="listItems" class="list-group list-group-flush"> <!--bind showInfo on click -->
+					<li><span data-bind="text: title, click: $parent.showInfo"></span></li>
 				</ul>
 			</div>
 		</div>
