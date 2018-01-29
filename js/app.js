@@ -55,9 +55,6 @@ function initMap() {
 				self.callAPI();
 				self.filterMarkers();
 			});
-			// for(let i = 0; i < self.markers().length; i++) {
-				
-			// }
 		}
 
 		//add infowindow to marker
@@ -68,30 +65,40 @@ function initMap() {
 			//listen for click on markers
 			google.maps.event.addListener(marker, 'click', function() {
 				infowindow.open(map, this);
-				this.setAnimation(google.maps.Animation.BOUNCE);					
-				infowindow.setContent(`<h3><strong>${this.title}</strong></h3></br>
-		            ${locInfo} </br> 
-		            <a href=${wikiUrl}>${siteUrl}</a></br>
-		            <img src=${pic}>`
-		        );
+				let self = this;
+				self.setAnimation(google.maps.Animation.BOUNCE);
+				//stop marker bouncing after 3 bounces
+				setTimeout(function() {
+					self.setAnimation(null);
+				}, 2100);				
 			});	
 		}
 
 		//call wikipedia and Flickr APIs
 		this.callAPI = function() {
-			//Wikipedia AJAK request from Udacity Intro to AJAX with some adjustments
-		    wikiUrl = `http://en.wikipedia.org/w/api.php?action=opensearch&search=${marker.title}&format=json&callback=wikiCallback`;
-		    //if page takes long time to load
-		    let wikiRequestTimeout = setTimeout(function() {
-		        alert('failed to get wikipedia resources');
-		    }, 8000);
-		    let ajax = $.ajax({
+    	// Wikipedia AJAK request from Udacity Intro to AJAX with adjustments
+	    wikiUrl = `http://en.wikipedia.org/w/api.php?action=opensearch&search=${marker.title}&format=json&callback=wikiCallback`;
+	    //if page takes long time to load
+	    let wikiRequestTimeout = setTimeout(function() {
+	        alert('failed to get wikipedia resources');
+	    }, 8000);
+	    	let ajax = $.ajax({
 		        url: wikiUrl,
 		        dataType: 'jsonp',
 		        //callback
 		        success: function(response) {
 		           locInfo = response[2][0];
 		           siteUrl = response[3][0];
+		           if(locInfo === undefined || siteUrl === undefined) {
+		               locInfo = "Cannot find information";
+		               siteUrl = "Cannot find url";
+		           }
+		           // SET INFOWINDOW CONTENT HERE
+		           infowindow.setContent(`<h3><strong>${marker.title}</strong></h3></br>
+		            ${locInfo} </br> 
+		            <a href=${wikiUrl}>${siteUrl}</a></br>
+		            <img src=${pic}>`
+        			);
 		           // stop timeout from happening once things are loaded
 		           clearTimeout(wikiRequestTimeout);
 		        }
@@ -108,7 +115,7 @@ function initMap() {
 				$.each( data.items, function( i, item ) {
 					pic = item.media.m;
 				});
-			});
+			});  
 		}
 
 		// filter the items using the filter text
@@ -132,96 +139,39 @@ function initMap() {
 
 		//filter markers
 		self.filterMarkers = function() {
-			for(let i = 0; i < self.markers().length; i++) {
-				//close any infowindows that may be open
-				infowindow.close();
-				self.markers()[i].marker.setVisible(false);
-			}
-			for(let i = 0; i < self.filteredLoc().length; i++) {
-				self.filteredLoc()[i].marker.setVisible(true);
-				infowindow.open(map, self.filteredLoc()[i].marker);
-			}
+			$('#search').on('keyup', function() {
+				for(let i = 0; i < self.markers().length; i++) {
+					//close any infowindows that may be open
+					infowindow.close();
+					self.markers()[i].marker.setVisible(false);
+				}
+				for(let i = 0; i < self.filteredLoc().length; i++) {
+					let fil = self.filteredLoc()[i].marker;
+					//show all markers in filteredLoc
+					fil.setVisible(true);
+					//open infowindow for filteredLoc markers
+					infowindow.open(map, self.filteredLoc()[i].marker);
+					//set animation to marker and stop animation after 3 bounces
+					fil.setAnimation(google.maps.Animation.BOUNCE);
+					setTimeout(function() {
+					fil.setAnimation(null);
+				}, 2100);
+				}
+			});
 		}
 
 		// when list item is clicked, open corresponding marker's info
 		this.showInfo = function() {
-			// for(let i = 0; i < self.markers().length; i++) {
-			// 	$('li').on('click', function() {
-			// 		//check to see which marker corresponds with clicked item list
-			// 		if(self.markers()[i].title === $(this).text()) {
-			// 			// marker.position = self.markers()[i].location;
-			// 			// console.log(self.markers()[i].location);
-			// 			self.addInfoWindow();
-			// 			marker.infowindow.open(map, marker);
-			// 			marker.setAnimation(google.maps.Animation.BOUNCE);
-			// 		}					
-			// 	});
-				
-			// }
-			// self.addInfoWindow();
+			google.maps.event.trigger(this.marker, 'click');
+			// let el = document.querySelector('li');
+			// el.style.backgroundColor = '#2073f9';
+			// el.style.color = '#fff';			
 		}
 
 		//call addMarkers
 		this.addMarker();
 	}
-	// let myView = new ViewModel();
+
 	//apply bindings
 	ko.applyBindings(new ViewModel());
 }
-
-
-	
-
-// ********************************************************************
-
-//create place autocomplete
-	// let input = document.getElementById('search');
-	// let autocomplete = new google.maps.places.Autocomplete(input);
-
-	//get search results
-	// autocomplete.addListener('place_changed', function() {
-	// 	autoLocation = autocomplete.getPlace();
-	// 	// add new location to markers array
-	// 	ViewModel.markers.push({
-	// 		title: autoLocation.name,
-	// 		locations: {
-	// 			lat: autoLocation.geometry.location.lat(),
-	// 			lng: autoLocation.geometry.location.lng()
-	// 		}
-	// 	});
-
-	// 	//add marker and info window for new location to the map
-	// 	marker = new google.maps.Marker({
-	// 		position: {
-	// 			lat: autoLocation.geometry.location.lat(),
-	// 			lng: autoLocation.geometry.location.lng()
-	// 		},
-	// 		map: map,
-	// 		title: autoLocation.name,
-	// 		animation: google.maps.Animation.DROP,
-	// 	});
-
-	// 	//clear the input box
-	// 	document.getElementById('search').value = '';
-
-	// 	//add info window for new marker
-	// 	ViewModel.addInfoWindow();
-
-	// 	//bias results for auto complete to bounds of current map area
-	// 	autocomplete.bindTo('bounds', map);
-	// });
-
-// show/hide sidebar when bars icon is clicked
-// $('#bars').on('click', function() {
-// 	if($('.listView').css('visibility', 'visible')) {
-// 		$('#map').css('width', '100%');
-// 		$('.mapNav').css('width', '100%');
-// 		$('.listView').css('visibility', 'hidden');
-// 		$('.navbar').css('visibility', 'hidden');
-// 	} else {
-// 		$('#map').css('width', '100%');
-// 		$('.mapNav').css('width', '100%');
-// 		$('.listView').css('visibility', 'visible');
-// 		$('.navbar').css('visibility', 'visible');
-// 	}
-// });
