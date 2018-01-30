@@ -8,7 +8,36 @@ function initMap() {
 	let options = {
 		center: {lat: 34.020289, lng: -117.865339},
 		zoom: 13,
-		scrollwheel: false
+		scrollwheel: false,
+		styles: [
+			{
+			"featureType": "landscape.natural",
+			"elementType": "geometry.fill",
+			"stylers": [
+			  {
+			    "color": "#1fd15e"
+			  }
+			]
+			},
+			{
+			"featureType": "road.highway",
+			"elementType": "geometry.fill",
+			"stylers": [
+			  {
+			    "color": "#d70000"
+			  }
+			]
+			},
+			{
+			"featureType": "water",
+			"elementType": "geometry.fill",
+			"stylers": [
+			  {
+			    "color": "#178dee"
+			  }
+			]
+			}
+			] 
 	};
 	//creating map
 	map = new google.maps.Map(document.getElementById('map'), options);
@@ -173,9 +202,11 @@ function initMap() {
 		this.toggleSidebar = function() {
 			if(sideBar === 'show') {
 				$('.listView').css('-webkit-transform', 'translate(-100%, 0)');
+				$('#map').css('-webkit-transform', 'translate(0, 0)');
 				sideBar = 'hide';
 			} else {
 				$('.listView').css('-webkit-transform', 'translate(0, 0)');
+				$('#map').css('-webkit-transform', 'translate(200px, 0)');
 				sideBar = 'show';
 			}
 		}
