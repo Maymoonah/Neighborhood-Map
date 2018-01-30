@@ -1,5 +1,5 @@
 //declare variables on global level
-let markers, locations, ViewModel, marker, infowindow;
+let markers, locations, ViewModel, marker, infowindow, sideBar = 'show';
 
 
 //Initialize the map
@@ -46,6 +46,7 @@ function initMap() {
 					title: element.title,
 					icon: element.icon,
 					animation: google.maps.Animation.DROP,
+					stopCoords: element
 				});
 				//bind each marker to its location
 				element.marker = marker;
@@ -167,6 +168,19 @@ function initMap() {
 			// el.style.backgroundColor = '#2073f9';
 			// el.style.color = '#fff';			
 		}
+
+		//show and hide sidebar
+		this.toggleSidebar = function() {
+			if(sideBar === 'show') {
+				$('.listView').css('-webkit-transform', 'translate(-100%, 0)');
+				sideBar = 'hide';
+			} else {
+				$('.listView').css('-webkit-transform', 'translate(0, 0)');
+				sideBar = 'show';
+			}
+			console.log(sideBar);
+		}
+
 
 		//call addMarkers
 		this.addMarker();
