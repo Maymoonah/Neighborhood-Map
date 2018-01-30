@@ -1,6 +1,6 @@
 #map {
 	height: 100%;	
-	width: 78%;
+	width: 100%;
 	float: right;
 }
 
@@ -16,9 +16,9 @@
 	font-size: 15px;
 }
 
-
 #bars {
 	font-size: 28px;
+	margin-right: 10px;
 }
 
 #bars:hover {
@@ -34,18 +34,22 @@
 }
 
 .listView {
+	position: fixed;
 	float: left;
 	height: 100%;
-	width: 22%;
+	width: 300px;
 	background-color: #303235;
 	visibility: visible;
+
+	-webkit-transform: translate(0, 0);
+	-webkit-transition: all 1s ease;
+
 }
 
 .mapNav {
-	width: 78%;
+	width: 100%;
 	height: 40px;
 	background-color: #243d66;
-	float: right;
 }
 
 .navbar {
@@ -57,10 +61,10 @@
 
 h2 {
 	color: #fff;
-	margin: 0;
 	font-family: 'Indie Flower', cursive;
 	font-size: 30px;
-	margin-left: 10px;
+	display: inline;
+	text-align: center;
 }
 
 i {
@@ -85,6 +89,7 @@ html, body {
 }
 
 li {
+	display: block;
 	color: #9a9ca0;
 	list-style: none;
 	font-size: 16px;
@@ -105,4 +110,17 @@ hr {
 ul {
 	padding: 0;
 	margin: 6px;
+}
+
+/*creating media queries*/
+@media only screen and (max-width: 700px) {
+	.listView {
+		width: 250px;
+	}
+}
+
+@media only screen and (max-width: 515px) {
+    .listView {
+		width: 200px;
+	}
 }
