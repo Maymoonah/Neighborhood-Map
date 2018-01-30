@@ -2,6 +2,10 @@
 	height: 100%;	
 	width: 100%;
 	float: right;
+
+	-webkit-transform: translate(200px, 0);
+	-webkit-transition: all 1s ease;
+
 }
 
 #filter {
