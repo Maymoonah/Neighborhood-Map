@@ -178,7 +178,6 @@ function initMap() {
 				$('.listView').css('-webkit-transform', 'translate(0, 0)');
 				sideBar = 'show';
 			}
-			console.log(sideBar);
 		}
 
 
