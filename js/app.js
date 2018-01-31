@@ -75,11 +75,9 @@ function initMap() {
 					title: element.title,
 					icon: element.icon,
 					animation: google.maps.Animation.DROP,
-					stopCoords: element
 				});
 				//bind each marker to its location
 				element.marker = marker;
-
 				//call functions
 				self.addInfoWindow();
 				self.callAPI();
@@ -94,8 +92,13 @@ function initMap() {
 
 			//listen for click on markers
 			google.maps.event.addListener(marker, 'click', function() {
-				infowindow.open(map, this);
 				let self = this;
+				infowindow.open(map, this);
+				infowindow.setContent(`<h3><strong>${self.title}</strong></h3></br>
+		            <strong>Wikipedia</strong>: ${locInfo} </br> 
+		            <a href=${wikiUrl}>${siteUrl}</a></br>
+		            <strong>Flickr</strong>: <img src=${pic}>`
+        			);
 				self.setAnimation(google.maps.Animation.BOUNCE);
 				//stop marker bouncing after 3 bounces
 				setTimeout(function() {
@@ -106,12 +109,8 @@ function initMap() {
 
 		//call wikipedia and Flickr APIs
 		this.callAPI = function() {
-    	// Wikipedia AJAK request from Udacity Intro to AJAX with adjustments
-	    wikiUrl = `http://en.wikipedia.org/w/api.php?action=opensearch&search=${marker.title}&format=json&callback=wikiCallback`;
-	    //if page takes long time to load
-	    let wikiRequestTimeout = setTimeout(function() {
-	        alert('failed to get wikipedia resources');
-	    }, 8000);
+	    	// Wikipedia AJAK request from Udacity Intro to AJAX with adjustments
+		    wikiUrl = `http://en.wikipedia.org/w/api.php?action=opensearch&search=${marker.title}&format=json&callback=wikiCallback`;
 	    	let ajax = $.ajax({
 		        url: wikiUrl,
 		        dataType: 'jsonp',
@@ -123,14 +122,11 @@ function initMap() {
 		               locInfo = "Cannot find information";
 		               siteUrl = "Cannot find url";
 		           }
-		           // SET INFOWINDOW CONTENT HERE
-		           infowindow.setContent(`<h3><strong>${marker.title}</strong></h3></br>
-		            ${locInfo} </br> 
-		            <a href=${wikiUrl}>${siteUrl}</a></br>
-		            <img src=${pic}>`
-        			);
-		           // stop timeout from happening once things are loaded
-		           clearTimeout(wikiRequestTimeout);
+		        }, 
+
+		        //error handling
+		        error: function() {
+		        	alert('error getting wikipedia information');
 		        }
 		    });
 
@@ -180,7 +176,7 @@ function initMap() {
 					//show all markers in filteredLoc
 					fil.setVisible(true);
 					//open infowindow for filteredLoc markers
-					infowindow.open(map, self.filteredLoc()[i].marker);
+					infowindow.open(map, fil);
 					//set animation to marker and stop animation after 3 bounces
 					fil.setAnimation(google.maps.Animation.BOUNCE);
 					setTimeout(function() {
