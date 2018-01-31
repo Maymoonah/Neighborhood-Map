@@ -94,11 +94,6 @@ function initMap() {
 			google.maps.event.addListener(marker, 'click', function() {
 				let self = this;
 				infowindow.open(map, this);
-				infowindow.setContent(`<h3><strong>${self.title}</strong></h3></br>
-		            <strong>Wikipedia</strong>: ${locInfo} </br> 
-		            <a href=${wikiUrl}>${siteUrl}</a></br>
-		            <strong>Flickr</strong>: <img src=${pic}>`
-        			);
 				self.setAnimation(google.maps.Animation.BOUNCE);
 				//stop marker bouncing after 3 bounces
 				setTimeout(function() {
@@ -122,6 +117,11 @@ function initMap() {
 		               locInfo = "Cannot find information";
 		               siteUrl = "Cannot find url";
 		           }
+		           infowindow.setContent(`<h3><strong>${marker.title}</strong></h3></br>
+		            <strong>Wikipedia</strong>: ${locInfo} </br> 
+		            <a href=${wikiUrl}>${siteUrl}</a></br>
+		            <strong>Flickr</strong>: <img src=${pic}>`
+        			);
 		        }, 
 
 		        //error handling
