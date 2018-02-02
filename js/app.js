@@ -1,6 +1,5 @@
 //declare variables on global level
-let markers, locations, ViewModel, marker, infowindow, sideBar = 'show';
-
+let locations, ViewModel, marker, infowindow, sideBar = 'show';
 
 //Initialize the map
 function initMap() {
@@ -41,6 +40,9 @@ function initMap() {
 	};
 	//creating map
 	map = new google.maps.Map(document.getElementById('map'), options);
+	//create info windows
+	infowindow = new google.maps.InfoWindow({maxWidth: 200});
+
 
 	//View Model
 	ViewModel = function() {
@@ -78,28 +80,27 @@ function initMap() {
 				});
 				//bind each marker to its location
 				element.marker = marker;
+
+				//listen for click on markers
+				google.maps.event.addListener(marker, 'click', function() {
+					let self = this;
+					infowindow.setContent(`<h3><strong>${self.title}</strong></h3></br>
+			            <strong>Wikipedia</strong>: ${locInfo} </br> 
+			            <a href=${wikiUrl}>${siteUrl}</a></br>
+			            <strong>Flickr</strong>: <img src=${pic}>`
+	        			);
+					infowindow.open(map, this);
+					self.setAnimation(google.maps.Animation.BOUNCE);
+					//stop marker bouncing after 3 bounces
+					setTimeout(function() {
+						self.setAnimation(null);
+					}, 2100);				
+				});	
+
 				//call functions
-				self.addInfoWindow();
 				self.callAPI();
 				self.filterMarkers();
 			});
-		}
-
-		//add infowindow to marker
-		this.addInfoWindow = function() {
-			//create info windows
-			infowindow = new google.maps.InfoWindow({maxWidth: 200});
-
-			//listen for click on markers
-			google.maps.event.addListener(marker, 'click', function() {
-				let self = this;
-				infowindow.open(map, this);
-				self.setAnimation(google.maps.Animation.BOUNCE);
-				//stop marker bouncing after 3 bounces
-				setTimeout(function() {
-					self.setAnimation(null);
-				}, 2100);				
-			});	
 		}
 
 		//call wikipedia and Flickr APIs
@@ -117,11 +118,6 @@ function initMap() {
 		               locInfo = "Cannot find information";
 		               siteUrl = "Cannot find url";
 		           }
-		           infowindow.setContent(`<h3><strong>${marker.title}</strong></h3></br>
-		            <strong>Wikipedia</strong>: ${locInfo} </br> 
-		            <a href=${wikiUrl}>${siteUrl}</a></br>
-		            <strong>Flickr</strong>: <img src=${pic}>`
-        			);
 		        }, 
 
 		        //error handling
@@ -161,6 +157,7 @@ function initMap() {
 					return stringStartsWith(item.title.toLowerCase(), self.filterText());
 				});
 			}
+			self.filterMarkers();
 		});
 
 		//filter markers
