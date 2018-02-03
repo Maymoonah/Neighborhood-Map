@@ -1,5 +1,5 @@
 //declare variables on global level
-let locations, ViewModel, marker, infowindow, sideBar = 'show';
+let locations, ViewModel, infowindow, sideBar = 'show';
 
 //Initialize the map
 function initMap() {
@@ -69,7 +69,7 @@ function initMap() {
 		]);
 
 		//add marker to map
-		this.addMarker = function() {
+		this.addMarker = function(marker) {
 			self.markers().forEach(function(element) {
 				marker = new google.maps.Marker({
 					position: element.location,
@@ -98,13 +98,13 @@ function initMap() {
 				});	
 
 				//call functions
-				self.callAPI();
-				self.filterMarkers();
+				self.callAPI(marker);
+				self.filterMarkers(marker);
 			});
 		}
 
 		//call wikipedia and Flickr APIs
-		this.callAPI = function() {
+		this.callAPI = function(marker) {
 	    	// Wikipedia AJAK request from Udacity Intro to AJAX with adjustments
 		    wikiUrl = `http://en.wikipedia.org/w/api.php?action=opensearch&search=${marker.title}&format=json&callback=wikiCallback`;
 	    	let ajax = $.ajax({
@@ -161,7 +161,7 @@ function initMap() {
 		});
 
 		//filter markers
-		self.filterMarkers = function() {
+		self.filterMarkers = function(marker) {
 			$('#search').on('keyup', function() {
 				for(let i = 0; i < self.markers().length; i++) {
 					//close any infowindows that may be open
