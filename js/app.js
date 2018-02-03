@@ -1,5 +1,5 @@
 //declare variables on global level
-let locations, ViewModel, infowindow, sideBar = 'show';
+let ViewModel, sideBar = 'show';
 
 //Initialize the map
 function initMap() {
@@ -69,7 +69,7 @@ function initMap() {
 		]);
 
 		//add marker to map
-		this.addMarker = function(marker) {
+		this.initMarker = function() {
 			self.markers().forEach(function(element) {
 				marker = new google.maps.Marker({
 					position: element.location,
@@ -83,22 +83,21 @@ function initMap() {
 
 				//listen for click on markers
 				google.maps.event.addListener(marker, 'click', function() {
-					let self = this;
-					infowindow.setContent(`<h3><strong>${self.title}</strong></h3></br>
+					infowindow.setContent(`<h3><strong>${marker.title}</strong></h3></br>
 			            <strong>Wikipedia</strong>: ${locInfo} </br> 
 			            <a href=${wikiUrl}>${siteUrl}</a></br>
 			            <strong>Flickr</strong>: <img src=${pic}>`
 	        			);
-					infowindow.open(map, this);
-					self.setAnimation(google.maps.Animation.BOUNCE);
+					infowindow.open(map, marker);
+					marker.setAnimation(google.maps.Animation.BOUNCE);
 					//stop marker bouncing after 3 bounces
 					setTimeout(function() {
-						self.setAnimation(null);
-					}, 2100);				
-				});	
+						marker.setAnimation(null);
+					}, 2100);
+					self.callAPI(marker);				
+				}.bind(self));	
 
 				//call functions
-				self.callAPI(marker);
 				self.filterMarkers(marker);
 			});
 		}
@@ -206,7 +205,7 @@ function initMap() {
 
 
 		//call addMarkers
-		this.addMarker();
+		this.initMarker();
 	}
 
 	//apply bindings
