@@ -83,20 +83,30 @@ function initMap() {
 
 				//listen for click on markers
 				google.maps.event.addListener(marker, 'click', function() {
-					infowindow.setContent(`<h3><strong>${marker.title}</strong></h3></br>
-			            <strong>Wikipedia</strong>: ${locInfo} </br> 
-			            <a href=${wikiUrl}>${siteUrl}</a></br>
-			            <strong>Flickr</strong>: <img src=${pic}>`
-	        			);
-					infowindow.open(map, marker);
+					//call functions
+					this.callAPI(marker);
+
+					setTimeout(function() {
+						//open infowindow
+						infowindow.open(map, marker);
+						//set infowindow content
+						infowindow.setContent(`<h3><strong>${marker.title}</strong></h3></br>
+				            <strong>Wikipedia</strong>: ${locInfo} </br> 
+				            <a href=${wikiUrl}>${siteUrl}</a></br>
+				            <strong>Flickr</strong>: <img src=${pic}>`
+		        		);
+					}, 700);
+					
+
+
+					//set marker animation
 					marker.setAnimation(google.maps.Animation.BOUNCE);
+
 					//stop marker bouncing after 3 bounces
 					setTimeout(function() {
 						marker.setAnimation(null);
 					}, 2100);	
-
-					//call functions
-					this.callAPI(marker);		
+		
 				}.bind(self));
 
 				//call filterMarkers
@@ -158,7 +168,6 @@ function initMap() {
 					return stringStartsWith(item.title.toLowerCase(), self.filterText());
 				});
 			}
-			self.filterMarkers();
 		});
 
 		//filter markers
