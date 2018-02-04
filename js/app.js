@@ -97,7 +97,7 @@ function initMap() {
 
 					//call functions
 					self.callAPI(marker);		
-				}.bind(self));
+				}.bind(self.callAPI(marker)));
 
 				//call filterMarkers
 				self.filterMarkers(marker);
