@@ -86,16 +86,12 @@ function initMap() {
 					//call functions
 					this.callAPI(marker);
 
-					setTimeout(function() {
+					// setTimeout(function() {
 						//open infowindow
 						infowindow.open(map, marker);
 						//set infowindow content
-						infowindow.setContent(`<h3><strong>${marker.title}</strong></h3></br>
-				            <strong>Wikipedia</strong>: ${locInfo} </br> 
-				            <a href=${wikiUrl}>${siteUrl}</a></br>
-				            <strong>Flickr</strong>: <img src=${pic}>`
-		        		);
-					}, 700);
+						
+					// }, 700);
 					
 
 
@@ -126,9 +122,15 @@ function initMap() {
 		           locInfo = response[2][0];
 		           siteUrl = response[3][0];
 		           if(locInfo === undefined || siteUrl === undefined) {
-		               locInfo = "Cannot find information";
+		               locInfo = "information not available on Wikipedia";
 		               siteUrl = "Cannot find url";
 		           }
+
+		           //set infowindow content
+		           infowindow.setContent(`<h3><strong>${marker.title}</strong></h3></br>
+			            <strong>Wikipedia</strong>: ${locInfo} </br> 
+			            <a href=${wikiUrl}>${siteUrl}</a></br>`
+	        		);
 		        }, 
 
 		        //error handling
@@ -148,6 +150,10 @@ function initMap() {
 				$.each( data.items, function( i, item ) {
 					pic = item.media.m;
 				});
+				//set picture to existing infowindow content
+	           infowindow.setContent(infowindow.getContent() +
+		            `<strong>Flickr</strong>: <img src=${pic}>`
+        		);
 			});  
 		}
 
