@@ -93,11 +93,13 @@ function initMap() {
 					//stop marker bouncing after 3 bounces
 					setTimeout(function() {
 						marker.setAnimation(null);
-					}, 2100);
-					self.callAPI(marker);				
-				}.bind(self));	
+					}, 2100);	
 
-				//call functions
+					//call functions
+					self.callAPI(marker);		
+				}.bind(self));
+
+				//call filterMarkers
 				self.filterMarkers(marker);
 			});
 		}
