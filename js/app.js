@@ -1,5 +1,5 @@
 //declare variables on global level
-let ViewModel, sideBar = 'show';
+let ViewModel, infowindow, sideBar = 'show';
 
 //Initialize the map
 function initMap() {
@@ -71,7 +71,7 @@ function initMap() {
 		//add marker to map
 		this.initMarker = function() {
 			self.markers().forEach(function(element) {
-				marker = new google.maps.Marker({
+				let marker = new google.maps.Marker({
 					position: element.location,
 					map: map,
 					title: element.title,
@@ -96,8 +96,8 @@ function initMap() {
 					}, 2100);	
 
 					//call functions
-					self.callAPI(marker);		
-				}.bind(self.callAPI(marker)));
+					this.callAPI(marker);		
+				}.bind(self));
 
 				//call filterMarkers
 				self.filterMarkers(marker);
