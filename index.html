@@ -13,7 +13,7 @@
 		<div id="map"></div>
 		<div class="listView">
 			<div id="input">
-				<input type="text" id="search" data-bind="value: filterText, valueUpdate: 'afterkeydown'" placeholder="Enter Filter Here ...">
+				<input type="text" id="search" data-bind="value: filterText, valueUpdate: 'afterkeydown', event: {keyup: filterMarkers}" placeholder="Enter Filter Here ...">
 			</div>
 			<div id="results">
 				<ul data-bind="foreach: filteredLoc" id="listItems" class="list-group list-group-flush"> <!--bind showInfo on click -->
