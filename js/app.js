@@ -83,18 +83,18 @@ function initMap() {
 
 				//listen for click on markers
 				google.maps.event.addListener(marker, 'click', function() {
+					//set map center to clicked marker
+					map.setCenter(marker.location);
+
+					infowindow.setContent('<strong>Loading...</strong>')
 					//call functions
 					this.callAPI(marker);
+					//open infowindow
+					infowindow.open(map, marker);
 
-					// setTimeout(function() {
-						//open infowindow
-						infowindow.open(map, marker);
-						//set infowindow content
-						
-					// }, 700);
+					//set center of map to clicked marker
+					map.setCenter(new google.maps.LatLng(marker.position.lat(), marker.position.lng()));
 					
-
-
 					//set marker animation
 					marker.setAnimation(google.maps.Animation.BOUNCE);
 
@@ -127,10 +127,11 @@ function initMap() {
 		           }
 
 		           //set infowindow content
-		           infowindow.setContent(`<h3><strong>${marker.title}</strong></h3></br>
+		           	infowindow.setContent(`<h3><strong>${marker.title}</strong></h3></br>
 			            <strong>Wikipedia</strong>: ${locInfo} </br> 
 			            <a href=${wikiUrl}>${siteUrl}</a></br>`
 	        		);
+		           
 		        }, 
 
 		        //error handling
@@ -151,9 +152,10 @@ function initMap() {
 					pic = item.media.m;
 				});
 				//set picture to existing infowindow content
-	           infowindow.setContent(infowindow.getContent() +
+				infowindow.setContent(infowindow.getContent() +
 		            `<strong>Flickr</strong>: <img src=${pic}>`
         		);
+	           
 			});  
 		}
 
@@ -161,6 +163,7 @@ function initMap() {
 		this.filterText = ko.observable('');
 		this.filteredLoc = ko.computed(function() {
 			if (!self.filterText) {
+				infowindow.close();
 		        return self.markers;
 		    } else {
 				return ko.utils.arrayFilter(self.markers(), function(item) {
@@ -180,16 +183,13 @@ function initMap() {
 		self.filterMarkers = function(marker) {
 			$('#search').on('keyup', function() {
 				for(let i = 0; i < self.markers().length; i++) {
-					//close any infowindows that may be open
-					infowindow.close();
 					self.markers()[i].marker.setVisible(false);
 				}
 				for(let i = 0; i < self.filteredLoc().length; i++) {
 					let fil = self.filteredLoc()[i].marker;
+					google.maps.event.trigger(this.marker, 'click');
 					//show all markers in filteredLoc
 					fil.setVisible(true);
-					//open infowindow for filteredLoc markers
-					infowindow.open(map, fil);
 					//set animation to marker and stop animation after 3 bounces
 					fil.setAnimation(google.maps.Animation.BOUNCE);
 					setTimeout(function() {
