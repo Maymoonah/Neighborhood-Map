@@ -101,12 +101,9 @@ function initMap() {
 					//stop marker bouncing after 3 bounces
 					setTimeout(function() {
 						marker.setAnimation(null);
-					}, 2100);	
+					}, 2100);
 		
 				}.bind(self));
-
-				//call filterMarkers
-				self.filterMarkers(marker);
 			});
 		}
 
@@ -162,8 +159,8 @@ function initMap() {
 		// filter the items using the filter text
 		this.filterText = ko.observable('');
 		this.filteredLoc = ko.computed(function() {
+			infowindow.close();
 			if (!self.filterText) {
-				infowindow.close();
 		        return self.markers;
 		    } else {
 				return ko.utils.arrayFilter(self.markers(), function(item) {
@@ -181,22 +178,24 @@ function initMap() {
 
 		//filter markers
 		self.filterMarkers = function(marker) {
-			$('#search').on('keyup', function() {
-				for(let i = 0; i < self.markers().length; i++) {
-					self.markers()[i].marker.setVisible(false);
-				}
-				for(let i = 0; i < self.filteredLoc().length; i++) {
-					let fil = self.filteredLoc()[i].marker;
-					google.maps.event.trigger(this.marker, 'click');
-					//show all markers in filteredLoc
-					fil.setVisible(true);
-					//set animation to marker and stop animation after 3 bounces
-					fil.setAnimation(google.maps.Animation.BOUNCE);
-					setTimeout(function() {
+			//hide all markers when user enters filter
+			for(let i = 0; i < self.markers().length; i++) {
+				self.markers()[i].marker.setVisible(false);
+			}
+
+			//show all markers in filtered array
+			for(let i = 0; i < self.filteredLoc().length; i++) {
+				let fil = self.filteredLoc()[i].marker;
+				fil.setVisible(true);
+
+				//set animation to marker and stop animation after 3 bounces
+				fil.setAnimation(google.maps.Animation.BOUNCE);
+				setTimeout(function() {
 					fil.setAnimation(null);
 				}, 2100);
-				}
-			});
+				//open infowindow for filtered marker
+				google.maps.event.trigger(fil, 'click');
+			}
 		}
 
 		// when list item is clicked, open corresponding marker's info
