@@ -37,6 +37,12 @@
 	margin-right: 8px;
 }
 
+.title {
+	text-shadow: #0496f7 1px 0 10px;
+	color: #000;
+	font-family: 'Shadows Into Light', cursive;
+}
+
 .listView {
 	position: absolute;
 	float: left;
