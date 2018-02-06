@@ -136,7 +136,7 @@ function initMap() {
 			//error handling
 			.fail(function() {
 				alert('error getting wikipedia information');
-			})
+			});
 			
 
 			//Flickr API
@@ -154,6 +154,9 @@ function initMap() {
 				infowindow.setContent(infowindow.getContent() +
 					`<strong>Flickr</strong>: <img src=${pic}>`
 				);
+			})
+			.fail(function() {
+				alert('error loading picture from Flickr');
 			});
 		};
 
