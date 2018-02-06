@@ -199,9 +199,10 @@ function initMap() {
 				//set animation to marker and stop animation after 3 bounces
 				fil.setAnimation(google.maps.Animation.BOUNCE);
 				setTimeout(Animation(fil), 2100);
-				//open infowindow for filtered marker
-				google.maps.event.trigger(fil, 'click');
+				
 			}
+			//open infowindow for filtered marker
+			google.maps.event.trigger(self.filteredLoc()[0].marker, 'click');
 
 			//close infowindow after filter is removed
 			if(self.filterText().length === 0) {
