@@ -102,7 +102,7 @@ function initMap() {
 					setTimeout(function() {
 						marker.setAnimation(null);
 					}, 2100);
-		
+
 				}.bind(self));
 			});
 		}
@@ -124,7 +124,7 @@ function initMap() {
 		           }
 
 		           //set infowindow content
-		           	infowindow.setContent(`<h3><strong>${marker.title}</strong></h3></br>
+		           	infowindow.setContent(`<h2 class="title"><strong>${marker.title}</strong></h2></br></br>
 			            <strong>Wikipedia</strong>: ${locInfo} </br> 
 			            <a href=${wikiUrl}>${siteUrl}</a></br>`
 	        		);
@@ -159,10 +159,15 @@ function initMap() {
 		// filter the items using the filter text
 		this.filterText = ko.observable('');
 		this.filteredLoc = ko.computed(function() {
-			infowindow.close();
+			//if no filter is applied, show all locations
+			let win = self.markers()[17];
 			if (!self.filterText) {
+				if(infowindow) {
+					win.infowindow.close();
+				}
 		        return self.markers;
 		    } else {
+		    	//return filtered locations when filter applied
 				return ko.utils.arrayFilter(self.markers(), function(item) {
 					// from https://github.com/knockout/knockout/issues/401
 					let stringStartsWith = function (string, startsWith) {
@@ -196,6 +201,15 @@ function initMap() {
 				//open infowindow for filtered marker
 				google.maps.event.trigger(fil, 'click');
 			}
+
+			//close infowindow after filter is removed
+			if(self.filterText().length === 0) {
+				infowindow.close();
+				//prevent all markers from bouncing after filter is removed
+				self.markers().forEach(function(element) {
+					element.marker.setAnimation(null);
+				});
+			}			
 		}
 
 		// when list item is clicked, open corresponding marker's info
