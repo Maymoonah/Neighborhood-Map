@@ -16,7 +16,7 @@
 				<input type="text" id="search" data-bind="value: filterText, valueUpdate: 'afterkeydown', event: {keyup: filterMarkers}" placeholder="Enter Filter Here ...">
 			</div>
 			<div id="results">
-				<ul data-bind="foreach: filteredLoc" id="listItems" class="list-group list-group-flush"> <!--bind showInfo on click -->
+				<ul data-bind="foreach: filteredLoc" id="listItems" class="list-group list-group-flush">
 					<li><span data-bind="text: title, click: $parent.showInfo"></span></li>
 				</ul>
 			</div>
@@ -30,6 +30,5 @@
 		<script type="text/javascript" src="js/app.js"></script>
 		<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDptmRQg_avx5L5y4USJ_3QCVEY6ClDhU&libraries=places&callback=initMap"></script>
 		
-
 	</body>
 </html>
