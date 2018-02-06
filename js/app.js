@@ -116,27 +116,28 @@ function initMap() {
 			let ajax = $.ajax({
 				url: wikiUrl,
 				dataType: 'jsonp',
-				//callback
-				success: function(response) {
-					locInfo = response[2][0];
-					siteUrl = response[3][0];
-					if(locInfo === undefined || siteUrl === undefined) {
-						locInfo = "information not available on Wikipedia";
-						siteUrl = "Cannot find url";
-					}
-
-					//set infowindow content
-					infowindow.setContent(`<h2 class="title"><strong>${marker.title}</strong></h2></br></br>
-						<strong>Wikipedia</strong>: ${locInfo} </br>
-						<a href=${wikiUrl}>${siteUrl}</a></br>`
-					);
-				},
-
-				//error handling
-				error: function() {
-					alert('error getting wikipedia information');
+			})
+			//callback
+			.done(function(response) {
+				locInfo = response[2][0];
+				siteUrl = response[3][0];
+				if(locInfo === undefined || siteUrl === undefined) {
+					locInfo = "information not available on Wikipedia";
+					siteUrl = "Cannot find url";
 				}
-			});
+
+				//set infowindow content
+				infowindow.setContent(`<h2 class="title"><strong>${marker.title}</strong></h2></br></br>
+					<strong>Wikipedia</strong>: ${locInfo} </br>
+					<a href=${wikiUrl}>${siteUrl}</a></br>`
+				);
+			})
+
+			//error handling
+			.fail(function() {
+				alert('error getting wikipedia information');
+			})
+			
 
 			//Flickr API
 			flickrUrl = "http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?";
@@ -179,7 +180,7 @@ function initMap() {
 
 		//filter markers
 		self.filterMarkers = function(marker) {
-			function Animation() {
+			function Animation(fil) {
 				fil.setAnimation(null);
 			}
 			//hide all markers when user enters filter
@@ -194,7 +195,7 @@ function initMap() {
 
 				//set animation to marker and stop animation after 3 bounces
 				fil.setAnimation(google.maps.Animation.BOUNCE);
-				setTimeout(Animation, 2100);
+				setTimeout(Animation(fil), 2100);
 				//open infowindow for filtered marker
 				google.maps.event.trigger(fil, 'click');
 			}
