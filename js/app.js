@@ -36,7 +36,7 @@ function initMap() {
 			  }
 			]
 			}
-			] 
+]
 	};
 	//creating map
 	map = new google.maps.Map(document.getElementById('map'), options);
@@ -54,7 +54,7 @@ function initMap() {
 			{title: 'Islamic Center of San Gabriel Valley', location: {lat: 33.994873, lng: -117.884711}, icon: './images/mosque.png'},
 			{title: 'Yogurtland', location: {lat: 34.027874, lng: -117.833771}, icon: './images/frozenyogurt.png'},
 			{title: 'Oak Tree Lanes', location: {lat: 34.035642, lng: -117.805326}, icon: './images/bowling.png'},
-			{title: 'Nogales High School', location: {lat: 34.009556, lng: -117.889152}, icon: './images/highschool.png'},			
+			{title: 'Nogales High School', location: {lat: 34.009556, lng: -117.889152}, icon: './images/highschool.png'},
 			{title: 'Pizza Hut', location: {lat: 33.985859, lng: -117.888866} ,icon: './images/pizza.png'},
 			{title: 'Domino\'s Pizza', location: {lat: 34.027549, lng: -117.893225}, icon: './images/pizza.png'},
 			{title: 'Baskin-Robbins', location: {lat: 34.011885, lng: -117.886430}, icon: './images/icecream.png'},
@@ -63,8 +63,8 @@ function initMap() {
 			{title: 'Farmers Market', location: {lat: 34.020304, lng: -117.811443}, icon: './images/farmersmarket.png'},
 			{title: 'South Pointe Middle School', location: {lat: 33.990842, lng: -117.848859}, icon: './images/school.png'},
 			{title: 'Los Angeles County Fire Dept.', location: {lat: 34.020786, lng: -117.865621}, icon: './images/firetruck.png'},
-			{title: 'Stop Break Shops', location: {lat: 33.998230, lng: -117.884749}, icon: './images/mechanic.png'},			
-			{title: 'Chevron', location: {lat: 34.015822, lng: -117.850391}, icon: './images/gas-station.png'},			
+			{title: 'Stop Break Shops', location: {lat: 33.998230, lng: -117.884749}, icon: './images/mechanic.png'},
+			{title: 'Chevron', location: {lat: 34.015822, lng: -117.850391}, icon: './images/gas-station.png'},
 			{title: 'Bank of America', location: {lat: 34.013161, lng: -117.861232}, icon: './images/bank.png'}
 		]);
 
@@ -86,7 +86,7 @@ function initMap() {
 					//set map center to clicked marker
 					map.setCenter(marker.location);
 
-					infowindow.setContent('<strong>Loading...</strong>')
+					infowindow.setContent('<strong>Loading...</strong>');
 					//call functions
 					this.callAPI(marker);
 					//open infowindow
@@ -94,7 +94,7 @@ function initMap() {
 
 					//set center of map to clicked marker
 					map.setCenter(new google.maps.LatLng(marker.position.lat(), marker.position.lng()));
-					
+
 					//set marker animation
 					marker.setAnimation(google.maps.Animation.BOUNCE);
 
@@ -110,35 +110,34 @@ function initMap() {
 		//call wikipedia and Flickr APIs
 		this.callAPI = function(marker) {
 	    	// Wikipedia AJAK request from Udacity Intro to AJAX with adjustments
-		    wikiUrl = `http://en.wikipedia.org/w/api.php?action=opensearch&search=${marker.title}&format=json&callback=wikiCallback`;
-	    	let ajax = $.ajax({
-		        url: wikiUrl,
-		        dataType: 'jsonp',
-		        //callback
-		        success: function(response) {
-		           locInfo = response[2][0];
-		           siteUrl = response[3][0];
-		           if(locInfo === undefined || siteUrl === undefined) {
-		               locInfo = "information not available on Wikipedia";
-		               siteUrl = "Cannot find url";
-		           }
+			wikiUrl = `http://en.wikipedia.org/w/api.php?action=opensearch&search=${marker.title}&format=json&callback=wikiCallback`;
+			let ajax = $.ajax({
+				url: wikiUrl,
+				dataType: 'jsonp',
+				//callback
+				success: function(response) {
+					locInfo = response[2][0];
+					siteUrl = response[3][0];
+					if(locInfo === undefined || siteUrl === undefined) {
+						locInfo = "information not available on Wikipedia";
+						siteUrl = "Cannot find url";
+					}
 
-		           //set infowindow content
-		           	infowindow.setContent(`<h2 class="title"><strong>${marker.title}</strong></h2></br></br>
-			            <strong>Wikipedia</strong>: ${locInfo} </br> 
-			            <a href=${wikiUrl}>${siteUrl}</a></br>`
-	        		);
-		           
-		        }, 
+					//set infowindow content
+					infowindow.setContent(`<h2 class="title"><strong>${marker.title}</strong></h2></br></br>
+						<strong>Wikipedia</strong>: ${locInfo} </br>
+						<a href=${wikiUrl}>${siteUrl}</a></br>`
+					);
+				},
 
-		        //error handling
-		        error: function() {
-		        	alert('error getting wikipedia information');
-		        }
-		    });
+				//error handling
+				error: function() {
+					alert('error getting wikipedia information');
+				}
+			});
 
-		    //Flickr API
-		    flickrUrl = "http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?";
+			//Flickr API
+			flickrUrl = "http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?";
 			$.getJSON( flickrUrl, {
 			tags: marker.title,
 			tagmode: "any",
@@ -150,31 +149,26 @@ function initMap() {
 				});
 				//set picture to existing infowindow content
 				infowindow.setContent(infowindow.getContent() +
-		            `<strong>Flickr</strong>: <img src=${pic}>`
-        		);
-	           
-			});  
+					`<strong>Flickr</strong>: <img src=${pic}>`
+				);
+			});
 		}
 
 		// filter the items using the filter text
 		this.filterText = ko.observable('');
 		this.filteredLoc = ko.computed(function() {
 			//if no filter is applied, show all locations
-			let win = self.markers()[17];
 			if (!self.filterText) {
-				if(infowindow) {
-					win.infowindow.close();
-				}
-		        return self.markers;
-		    } else {
-		    	//return filtered locations when filter applied
+				return self.markers;
+			} else {
+				//return filtered locations when filter applied
 				return ko.utils.arrayFilter(self.markers(), function(item) {
 					// from https://github.com/knockout/knockout/issues/401
 					let stringStartsWith = function (string, startsWith) {
-					    string = string || "";
-					    if (startsWith.length > string.length)
-					        return false;
-					    return string.substring(0, startsWith.length) === startsWith;
+						string = string || "";
+						if (startsWith.length > string.length)
+							return false;
+						return string.substring(0, startsWith.length) === startsWith;
 					}
 					return stringStartsWith(item.title.toLowerCase(), self.filterText());
 				});
@@ -209,15 +203,12 @@ function initMap() {
 				self.markers().forEach(function(element) {
 					element.marker.setAnimation(null);
 				});
-			}			
+			}
 		}
 
 		// when list item is clicked, open corresponding marker's info
 		this.showInfo = function() {
 			google.maps.event.trigger(this.marker, 'click');
-			// let el = document.querySelector('li');
-			// el.style.backgroundColor = '#2073f9';
-			// el.style.color = '#fff';			
 		}
 
 		//show and hide sidebar
@@ -232,7 +223,6 @@ function initMap() {
 				sideBar = 'show';
 			}
 		}
-
 
 		//call addMarkers
 		this.initMarker();
