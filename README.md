@@ -12,3 +12,6 @@ the locations, remove the text from the input box.
 
 * To view the map fullscreen, click on the hamburger icon in the top left corner to hide the sidebar. 
 To view the sidebar, click on the hamburger icon once again.
+
+* To run the app, go to Neighborhood-Map folder. 
+Right click on index.html, and open the app with your preferred browser.
