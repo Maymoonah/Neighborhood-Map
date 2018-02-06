@@ -1,5 +1,7 @@
 //declare variables on global level
-let ViewModel, infowindow, sideBar = 'show';
+let ViewModel;
+let infowindow
+let sideBar = 'show';
 
 //Initialize the map
 function initMap() {
@@ -46,7 +48,7 @@ function initMap() {
 
 	//View Model
 	ViewModel = function() {
-		let locInfo, url, articleStr, wikiUrl, siteUrl, flickrUrl, pic;
+		let locInfo, wikiUrl, siteUrl, flickrUrl, pic;
 		let self = this;
 		this.markers = ko.observableArray([
 			{title: 'Krispy Kreme', location: {lat: 33.994923, lng: -117.930837}, icon: './images/donut.png'},
@@ -189,9 +191,10 @@ function initMap() {
 
 				//set animation to marker and stop animation after 3 bounces
 				fil.setAnimation(google.maps.Animation.BOUNCE);
-				setTimeout(function() {
+				function Animation() {
 					fil.setAnimation(null);
-				}, 2100);
+				}
+				setTimeout(Animation, 2100);
 				//open infowindow for filtered marker
 				google.maps.event.trigger(fil, 'click');
 			}
