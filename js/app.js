@@ -1,6 +1,6 @@
 //declare variables on global level
 let ViewModel;
-let infowindow
+let infowindow;
 let sideBar = 'show';
 
 //Initialize the map
@@ -107,7 +107,7 @@ function initMap() {
 
 				}.bind(self));
 			});
-		}
+		};
 
 		//call wikipedia and Flickr APIs
 		this.callAPI = function(marker) {
@@ -154,7 +154,7 @@ function initMap() {
 					`<strong>Flickr</strong>: <img src=${pic}>`
 				);
 			});
-		}
+		};
 
 		// filter the items using the filter text
 		this.filterText = ko.observable('');
@@ -171,7 +171,7 @@ function initMap() {
 						if (startsWith.length > string.length)
 							return false;
 						return string.substring(0, startsWith.length) === startsWith;
-					}
+					};
 					return stringStartsWith(item.title.toLowerCase(), self.filterText());
 				});
 			}
@@ -179,6 +179,9 @@ function initMap() {
 
 		//filter markers
 		self.filterMarkers = function(marker) {
+			function Animation() {
+				fil.setAnimation(null);
+			}
 			//hide all markers when user enters filter
 			for(let i = 0; i < self.markers().length; i++) {
 				self.markers()[i].marker.setVisible(false);
@@ -191,9 +194,6 @@ function initMap() {
 
 				//set animation to marker and stop animation after 3 bounces
 				fil.setAnimation(google.maps.Animation.BOUNCE);
-				function Animation() {
-					fil.setAnimation(null);
-				}
 				setTimeout(Animation, 2100);
 				//open infowindow for filtered marker
 				google.maps.event.trigger(fil, 'click');
@@ -207,12 +207,12 @@ function initMap() {
 					element.marker.setAnimation(null);
 				});
 			}
-		}
+		};
 
 		// when list item is clicked, open corresponding marker's info
 		this.showInfo = function() {
 			google.maps.event.trigger(this.marker, 'click');
-		}
+		};
 
 		//show and hide sidebar
 		this.toggleSidebar = function() {
@@ -225,11 +225,11 @@ function initMap() {
 				$('#map').css('-webkit-transform', 'translate(200px, 0)');
 				sideBar = 'show';
 			}
-		}
+		};
 
 		//call addMarkers
 		this.initMarker();
-	}
+	};
 
 	//apply bindings
 	ko.applyBindings(new ViewModel());
