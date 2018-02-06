@@ -3,7 +3,7 @@ This is a simple map of my neighborhood, **Walnut, CA**. It shows some of the ma
 such as places I eat, my college, and places I go to have fun such as bowling alleys.
 
 ## Usage
-*This app does not need any softwares or packages to be installed in order for it to be used. 
+* This app does not need any softwares or packages to be installed in order for it to be used. 
 It works with all browsers and various devices. To my knowledge, there are no bugs in the app.
 
 * You can view additional information about a location by clicking on the marker of the location. 
