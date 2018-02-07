@@ -244,4 +244,4 @@ function initMap() {
 //google maps api error handling
 gmapFail = function() {
 	alert('Error loading google maps!');
-}
+};
