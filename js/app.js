@@ -239,3 +239,8 @@ function initMap() {
 	//apply bindings
 	ko.applyBindings(new ViewModel());
 }
+
+//google maps api error handling
+gmapFail = function() {
+	alert('Error loading google maps!');
+}
