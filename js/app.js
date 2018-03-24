@@ -112,7 +112,7 @@ function initMap() {
 		//call wikipedia and Flickr APIs
 		this.callAPI = function(marker) {
 	    	// Wikipedia AJAK request from Udacity Intro to AJAX with adjustments
-			wikiUrl = `http://en.wikipedia.org/w/api.php?action=opensearch&search=${marker.title}&format=json&callback=wikiCallback`;
+			wikiUrl = `https://en.wikipedia.org/w/api.php?action=opensearch&search=${marker.title}&format=json&callback=wikiCallback`;
 			let ajax = $.ajax({
 				url: wikiUrl,
 				dataType: 'jsonp',
@@ -140,7 +140,7 @@ function initMap() {
 			
 
 			//Flickr API
-			flickrUrl = "http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?";
+			flickrUrl = "https://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?";
 			$.getJSON( flickrUrl, {
 			tags: marker.title,
 			tagmode: "any",
